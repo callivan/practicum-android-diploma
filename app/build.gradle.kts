@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -74,7 +74,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    ksp("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("com.markodevcic:peko:3.0.5")
     implementation("com.google.android.material:material:1.8.0")
