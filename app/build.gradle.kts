@@ -1,3 +1,7 @@
+object SDKVersion {
+    const val MIN_SDK_VERSION = 21
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -10,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "ru.practicum.android.diploma"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = SDKVersion.MIN_SDK_VERSION
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
