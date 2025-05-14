@@ -79,8 +79,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation ("com.markodevcic:peko:3.0.5")
 
-    implementation("com.google.android.material:material:1.11.0")
-    implementation ("com.google.android.material:material:1.6.1")
     implementation ("com.google.android.material:material:1.8.0")
 
 }
