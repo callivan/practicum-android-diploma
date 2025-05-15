@@ -5,19 +5,37 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsetsController
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.ActivityRootBinding
 
 class RootActivity : AppCompatActivity() {
+    private var binding: ActivityRootBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
+        enableEdgeToEdge()
+
         setupThemeAndStatusBar()
 
         // Пример использования access token для HeadHunter API
         networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
+
+        binding = ActivityRootBinding.inflate(layoutInflater)
+
+        setContentView(binding?.root)
+
+        val navHost =
+            binding?.rootFragmentContainer?.let { supportFragmentManager.findFragmentById(it.id) as NavHostFragment }
+        val navController = navHost?.navController
+
+        if (navController != null) {
+            binding?.bottomNavigation?.bottomNavigation?.setupWithNavController(navController)
+        }
     }
 
     private fun networkRequestExample(accessToken: String) {
