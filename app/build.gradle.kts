@@ -1,5 +1,5 @@
 object SDKVersion {
-    const val MIN_SDK_VERSION = 23
+    const val MIN_SDK_VERSION = 28
 }
 
 plugins {
@@ -41,6 +41,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
