@@ -1,0 +1,14 @@
+package ru.practicum.android.diploma.domain.impl
+
+import kotlinx.coroutines.flow.Flow
+import ru.practicum.android.diploma.data.dto.ResponseStatus
+import ru.practicum.android.diploma.domain.api.VacanciesRepository
+import ru.practicum.android.diploma.domain.models.VacanciesInteractor
+import ru.practicum.android.diploma.domain.models.VacanciesRequest
+import ru.practicum.android.diploma.domain.models.VacanciesResponse
+
+class VacanciesInteractorImpl(private val vacanciesRepository: VacanciesRepository) : VacanciesInteractor {
+    override fun getVacancies(queries: VacanciesRequest): Flow<ResponseStatus<VacanciesResponse>> {
+        return vacanciesRepository.getVacancies(queries)
+    }
+}

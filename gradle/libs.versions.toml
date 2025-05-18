@@ -3,7 +3,7 @@
 java = "VERSION_1_8"
 
 # Build constants
-minSdk = "26"
+minSdk = "28"
 compileSdk = "34"
 targetSdk = "33"
 
