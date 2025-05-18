@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="20dp"
+    tools:context=".ui.team.FragmentTeam">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="42dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:lineHeight="@dimen/line_height_l"
+        android:text="@string/page_team"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_l" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/ys_display_bold"
+        android:lineHeight="@dimen/line_height_lx"
+        android:text="@string/page_team_title"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="700"
+        android:textSize="@dimen/text_size_lx" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:lineHeight="@dimen/line_height_m"
+        android:text="@string/page_team_worker_1"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_m" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:lineHeight="@dimen/line_height_m"
+        android:text="@string/page_team_worker_2"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_m" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:lineHeight="@dimen/line_height_m"
+        android:text="@string/page_team_worker_3"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_m" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_medium"
+        android:lineHeight="@dimen/line_height_m"
+        android:text="@string/page_team_worker_4"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/text_size_m" />
+
+</LinearLayout>

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="page_main">Главная</string>
+    <string name="page_favorite">Избранное</string>
+    <string name="page_team">Команда</string>
+    <string name="page_team_title">Над приложением работали</string>
+    <string name="page_team_worker_1">Участник 1</string>
+    <string name="page_team_worker_2">Участник 2</string>
+    <string name="page_team_worker_3">Участник 3</string>
+    <string name="page_team_worker_4">Участник 4</string>
 </resources>
