@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- Состояние по умолчанию: текст пуст -->
+    <item>
+        <bitmap android:src="@drawable/search_24px"
+            android:gravity="end|center_vertical"/>
+    </item>
+</selector>

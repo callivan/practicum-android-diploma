@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+
+        <solid android:color="@color/gray"/>
+        <corners android:radius="@dimen/margin12"/>
+
+    </shape>
+</item>
+
+<item android:gravity="end|center_vertical" android:right="16dp">
+    <selector>
+        <item android:state_activated="true" android:drawable="@drawable/close_24px" />
+        <item android:drawable="@drawable/search_24px" />
+    </selector>
+</item>
+</layer-list>
