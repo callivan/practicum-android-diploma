@@ -11,4 +11,10 @@
     <dimen name="line_height_m">18sp</dimen>
     <dimen name="line_height_s">18sp</dimen>
     <dimen name="line_height_xs">16sp</dimen>
+
+
+    <dimen name="margin8">8dp</dimen>
+    <dimen name="margin12">12dp</dimen>
+    <dimen name="margin20">20dp</dimen>
+    <dimen name="margin59">59dp</dimen>
 </resources>
