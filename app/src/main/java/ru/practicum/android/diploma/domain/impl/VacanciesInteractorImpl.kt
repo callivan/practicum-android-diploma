@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.domain.models.VacancyRequest
 
 class VacanciesInteractorImpl(private val vacanciesRepository: VacanciesRepository) :
     VacanciesInteractor {
+class VacanciesInteractorImpl(private val vacanciesRepository: VacanciesRepository) : VacanciesInteractor {
     override fun getVacancies(queries: VacanciesRequest): Flow<ResponseStatus<VacanciesResponse>> {
         return vacanciesRepository.getVacancies(queries)
     }
