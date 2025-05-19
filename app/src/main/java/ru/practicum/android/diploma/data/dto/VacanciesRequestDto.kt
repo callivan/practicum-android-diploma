@@ -5,19 +5,19 @@ data class VacanciesRequestDto(
     val page: Int? = null,
     val area: String? = null,
     val salary: Int? = null,
-    val only_with_salary: Boolean = false,
-    val professional_role: String? = null
-) {
-    fun toQueryMap(): Map<String, String?> {
-        val queries = mutableMapOf<String, String?>()
+    val onlyWithSalary: Boolean = false,
+    val professionalRole: String? = null
+)
 
-        queries.put("text", text)
-        queries.put("page", page?.toString())
-        queries.put("area", area)
-        queries.put("salary", salary?.toString())
-        queries.put("only_with_salary", only_with_salary.toString())
-        queries.put("professional_role", professional_role)
+fun VacanciesRequestDto.toQueryMap(): Map<String, String?> {
+    val queries = mutableMapOf<String, String?>()
 
-        return queries.filterValues { it != null }
-    }
+    queries.put("text", text)
+    queries.put("page", page?.toString())
+    queries.put("area", area)
+    queries.put("salary", salary?.toString())
+    queries.put("only_with_salary", onlyWithSalary.toString())
+    queries.put("professional_role", professionalRole)
+
+    return queries.filterValues { it != null }
 }

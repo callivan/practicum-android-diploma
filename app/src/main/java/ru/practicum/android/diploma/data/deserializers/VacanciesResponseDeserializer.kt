@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.data.typeAdapters
+package ru.practicum.android.diploma.data.deserializers
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -38,7 +38,6 @@ class VacanciesResponseDeserializer : JsonDeserializer<VacanciesResponseDto> {
         val found = jsonObject.get("found").asInt
         val page = jsonObject.get("page").asInt
         val pages = jsonObject.get("pages").asInt
-
 
         return VacanciesResponseDto(
             items = items,

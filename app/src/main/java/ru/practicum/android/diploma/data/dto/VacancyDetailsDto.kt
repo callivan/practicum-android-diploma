@@ -4,7 +4,7 @@ data class VacancyDetailsDto(
     val id: String,
     val name: String,
     val description: String,
-    var employer: String? = null,
+    val employer: String? = null,
     val logo: String? = null,
     val salaryRangeFrom: Int? = null,
     val salaryRangeTo: Int? = null,
