@@ -21,8 +21,4 @@ class VacanciesRepositoryImpl(private val networkClient: NetworkClient) : Vacanc
         val res = networkClient.request(data)
         emit(res as ResponseStatus<VacancyDetails>)
     }
-    override fun getVacancies(queries: VacanciesRequest): Flow<ResponseStatus<VacanciesResponse>> = flow {
-        val res = networkClient.request(queries)
-        emit(res as ResponseStatus<VacanciesResponse>)
-    }
 }

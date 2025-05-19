@@ -12,7 +12,7 @@ class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServ
     NetworkClient {
     override suspend fun request(dto: Any): ResponseStatus<Any> {
         return withContext(Dispatchers.IO) {
-//            try {
+            try {
                 when (dto) {
                     is VacanciesRequest -> {
                         val data = headHunterApiServices.getVacancies(
@@ -41,9 +41,9 @@ class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServ
 
                     else -> ResponseStatus.Empty
                 }
-//            } catch (e: Throwable) {
-//                ResponseStatus.Error
-//            }
+            } catch (e: Throwable) {
+                ResponseStatus.Error
+            }
         }
     }
 }
