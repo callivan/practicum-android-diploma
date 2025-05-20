@@ -5,6 +5,6 @@ data class VacanciesRequest(
     val page: Int? = null,
     val area: String? = null,
     val salary: Int? = null,
-    val only_with_salary: Boolean = false,
-    val professional_role: String? = null
+    val onlyWithSalary: Boolean = false,
+    val professionalRole: String? = null
 )

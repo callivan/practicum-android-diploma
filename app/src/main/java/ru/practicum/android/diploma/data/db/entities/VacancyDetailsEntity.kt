@@ -1,7 +1,13 @@
-package ru.practicum.android.diploma.domain.models
+package ru.practicum.android.diploma.data.db.entities
 
-data class VacancyDetails(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favorite_vacancies")
+data class VacancyDetailsEntity(
+    @PrimaryKey
     val id: String,
+    val timestamp: Long = System.currentTimeMillis(),
     val name: String,
     val description: String,
     val employer: String? = null,

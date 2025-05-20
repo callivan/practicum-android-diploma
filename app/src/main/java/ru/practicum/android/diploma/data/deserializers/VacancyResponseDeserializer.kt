@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.data.typeAdapters
+package ru.practicum.android.diploma.data.deserializers
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -13,7 +13,9 @@ import java.lang.reflect.Type
 
 class VacancyResponseDeserializer : JsonDeserializer<VacancyDetailsDto> {
     override fun deserialize(
-        json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?
+        json: JsonElement,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
     ): VacancyDetailsDto {
         val jsonObject = json.asJsonObject
 
