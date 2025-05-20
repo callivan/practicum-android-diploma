@@ -58,7 +58,4 @@
         <item name="android:src">@drawable/arrow_back_24px</item>
         <item name="layout_constraintDimensionRatio">1:1</item>
     </style>
-    <style name="TopBarHeader">
-
-    </style>
 </resources>
