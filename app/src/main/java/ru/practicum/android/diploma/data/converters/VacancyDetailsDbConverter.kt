@@ -4,9 +4,9 @@ import ru.practicum.android.diploma.data.db.entities.VacancyDetailsEntity
 import ru.practicum.android.diploma.data.dto.VacancyDetailsDto
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 
-class FavoriteVacanciesDbConverter {
-    fun map(vacancy: VacancyDetailsDto): VacancyDetailsEntity {
-        return VacancyDetailsEntity(
+class VacancyDetailsDbConverter {
+    fun map(vacancy: VacancyDetailsDto): VacancyDetails {
+        return VacancyDetails(
             id = vacancy.id,
             name = vacancy.name,
             description = vacancy.description,
