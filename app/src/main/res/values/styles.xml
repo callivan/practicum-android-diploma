@@ -74,9 +74,9 @@
     </style>
 
     <style name="text_font_m">
-        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_size_m</item>
-        <item name="android:textFontWeight">400</item>
+        <item name="android:textFontWeight">500</item>
         <item name="android:lineHeight">@dimen/line_height_m</item>
     </style>
 
