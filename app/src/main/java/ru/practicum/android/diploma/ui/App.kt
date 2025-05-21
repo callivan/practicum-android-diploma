@@ -6,6 +6,7 @@ import org.koin.core.context.GlobalContext.startKoin
 import ru.practicum.android.diploma.di.dataModule
 import ru.practicum.android.diploma.di.interactorModule
 import ru.practicum.android.diploma.di.repositoryModule
+import ru.practicum.android.diploma.di.viewModelModule
 
 class App : Application() {
     override fun onCreate() {
@@ -13,7 +14,7 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(dataModule, repositoryModule, interactorModule)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
     }
 }

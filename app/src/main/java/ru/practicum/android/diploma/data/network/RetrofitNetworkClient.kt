@@ -2,22 +2,21 @@ package ru.practicum.android.diploma.data.network
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import ru.practicum.android.diploma.data.NetworkClient
-import ru.practicum.android.diploma.data.dto.ResponseStatus
+import ru.practicum.android.diploma.data.dto.ResponseStatusDto
 import ru.practicum.android.diploma.data.dto.VacanciesRequestDto
 import ru.practicum.android.diploma.data.dto.toQueryMap
-import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.VacancyRequest
+import ru.practicum.android.diploma.util.safeApiCall
 
 class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServices) :
     NetworkClient {
-    override suspend fun request(dto: Any): ResponseStatus<Any> {
+    override suspend fun request(dto: Any): ResponseStatusDto<Any> {
         return withContext(Dispatchers.IO) {
-            try {
-                when (dto) {
-                    is VacanciesRequest -> {
-                        val data = headHunterApiServices.getVacancies(
+            when (dto) {
+                is VacanciesRequestDto -> {
+                    safeApiCall {
+                        headHunterApiServices.getVacancies(
                             VacanciesRequestDto(
                                 text = dto.text,
                                 page = dto.page,
@@ -27,24 +26,16 @@ class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServ
                                 professionalRole = dto.professionalRole
                             ).toQueryMap()
                         )
-
-                        if (data.items.isNotEmpty()) {
-                            ResponseStatus.Content(data)
-                        } else {
-                            ResponseStatus.Empty
-                        }
                     }
-
-                    is VacancyRequest -> {
-                        val data = headHunterApiServices.getVacancyById(dto.vacancyId)
-
-                        ResponseStatus.Content(data)
-                    }
-
-                    else -> ResponseStatus.Empty
                 }
-            } catch (e: HttpException) {
-                ResponseStatus.Error(e)
+
+                is VacancyRequest -> {
+                    safeApiCall { headHunterApiServices.getVacancyById(dto.vacancyId) }
+                }
+
+                else -> {
+                    ResponseStatusDto.UnknownError(null)
+                }
             }
         }
     }

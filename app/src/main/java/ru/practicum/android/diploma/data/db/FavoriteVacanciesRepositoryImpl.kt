@@ -2,13 +2,13 @@ package ru.practicum.android.diploma.data.db
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.data.converters.FavoriteVacanciesDbConverter
+import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.domain.api.FavoriteVacanciesRepository
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 
 class FavoriteVacanciesRepositoryImpl(
     private val appDb: AppDb,
-    private val favoriteVacanciesDbConverter: FavoriteVacanciesDbConverter
+    private val favoriteVacanciesDbConverter: VacancyDetailsDbConverter
 ) : FavoriteVacanciesRepository {
     override fun getFavoriteVacancies(): Flow<List<VacancyDetails>> = flow {
         val res = appDb.favoriteVacanciesDao().getFavoriteVacancies()
