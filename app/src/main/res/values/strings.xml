@@ -9,4 +9,11 @@
     <string name="page_team_worker_2">Участник 2</string>
     <string name="page_team_worker_3">Участник 3</string>
     <string name="page_team_worker_4">Участник 4</string>
+    <string name="err_no_connection">Нет интернета</string>
+    <string name="err_load_vacancy_list">Не удалось получить\nсписок вакансий</string>
+    <string name="err_cant_find_region">Такого региона нет</string>
+    <string name="err_load_list">Не удалось получить\nсписок</string>
+    <string name="err_server">Ошибка сервера</string>
+    <string name="err_empty_list">Список пуст</string>
+    <string name="err_no_vacancy">Вакансия не найдена или\nудалена</string>
 </resources>
