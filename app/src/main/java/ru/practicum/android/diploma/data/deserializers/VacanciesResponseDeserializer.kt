@@ -24,6 +24,13 @@ class VacanciesResponseDeserializer : JsonDeserializer<VacanciesResponseDto> {
             val employer = vacancyAsJson.safeGetJsonObject("employer")
             val salaryRange = vacancyAsJson.safeGetJsonObject("salary_range")
 
+            val areaName = jsonObject.safeGetJsonObject("area")?.safeGetString("name")
+            val address = jsonObject.safeGetJsonObject("address")
+            val city = address?.safeGetString("city")
+            val street = address?.safeGetString("street")
+            val building = address?.safeGetString("building")
+            val fullAddress = "$city, $street, $building"
+
             VacancyShortDto(
                 id = vacancyAsJson.get("id").asString,
                 name = vacancyAsJson.get("name").asString,
@@ -32,7 +39,7 @@ class VacanciesResponseDeserializer : JsonDeserializer<VacanciesResponseDto> {
                 salaryRangeFrom = salaryRange?.safeGetInt("from"),
                 salaryRangeTo = salaryRange?.safeGetInt("to"),
                 salaryRangeCurrency = salaryRange?.safeGetString("currency"),
-                city = vacancyAsJson.safeGetJsonObject("address")?.safeGetString("city"),
+                address = if (city != null && street != null && building != null) fullAddress else areaName,
             )
         }
         val found = jsonObject.get("found").asInt

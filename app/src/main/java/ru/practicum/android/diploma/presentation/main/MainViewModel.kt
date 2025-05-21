@@ -15,13 +15,13 @@ import ru.practicum.android.diploma.presentation.mappers.toScreenState
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.util.debounce
 
-const val INPUT_DELAY = 500L
+const val INPUT_DELAY = 2000L
 
 class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
-    private val screenState = MutableLiveData<ScreenState<VacanciesResponse>>(ScreenState.Empty)
-
     private val inputDebouncer =
         debounce<String>(INPUT_DELAY, viewModelScope, true) { text -> getVacancies(text) }
+
+    private val screenState = MutableLiveData<ScreenState<VacanciesResponse>>(ScreenState.Empty)
 
     fun getScreenState(): LiveData<ScreenState<VacanciesResponse>> = screenState
 
