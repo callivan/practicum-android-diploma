@@ -13,7 +13,7 @@ class VacancyShortDbConverter {
             salaryRangeFrom = vacancy.salaryRangeFrom,
             salaryRangeTo = vacancy.salaryRangeTo,
             salaryRangeCurrency = vacancy.salaryRangeCurrency,
-            city = vacancy.city,
+            address = vacancy.address,
         )
     }
 
@@ -26,7 +26,7 @@ class VacancyShortDbConverter {
             salaryRangeFrom = vacancy.salaryRangeFrom,
             salaryRangeTo = vacancy.salaryRangeTo,
             salaryRangeCurrency = vacancy.salaryRangeCurrency,
-            city = vacancy.city,
+            address = vacancy.address,
         )
     }
 }

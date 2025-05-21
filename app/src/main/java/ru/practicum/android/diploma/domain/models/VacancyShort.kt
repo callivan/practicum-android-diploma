@@ -8,5 +8,5 @@ data class VacancyShort(
     val salaryRangeFrom: Int? = null,
     val salaryRangeTo: Int? = null,
     val salaryRangeCurrency: String? = null,
-    val city: String? = null,
+    val address: String? = null,
 )

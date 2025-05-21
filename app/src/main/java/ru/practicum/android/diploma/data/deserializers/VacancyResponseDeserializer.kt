@@ -22,16 +22,24 @@ class VacancyResponseDeserializer : JsonDeserializer<VacancyDetailsDto> {
         val employer = jsonObject.safeGetJsonObject("employer")
         val salaryRange = jsonObject.safeGetJsonObject("salary_range")
 
+        val areaName = jsonObject.safeGetJsonObject("area")?.safeGetString("name")
+        val address = jsonObject.safeGetJsonObject("address")
+        val city = address?.safeGetString("city")
+        val street = address?.safeGetString("street")
+        val building = address?.safeGetString("building")
+        val fullAddress = "$city, $street, $building"
+
         return VacancyDetailsDto(
             id = jsonObject.get("id").asString,
             name = jsonObject.get("name").asString,
             description = jsonObject.get("description").asString,
+            alternateUrl = jsonObject.get("alternate_url").asString,
             employer = employer?.safeGetString("name"),
             logo = employer?.safeGetJsonObject("logo_urls")?.safeGetString("90"),
             salaryRangeFrom = salaryRange?.safeGetInt("from"),
             salaryRangeTo = salaryRange?.safeGetInt("to"),
             salaryRangeCurrency = salaryRange?.safeGetString("currency"),
-            city = jsonObject.safeGetJsonObject("address")?.safeGetString("city"),
+            address = if (city != null && street != null && building != null) fullAddress else areaName,
             experience = jsonObject.safeGetJsonObject("experience")?.safeGetString("name"),
             keySkills = jsonObject.safeGetJsonArray("key_skills")
                 ?.mapNotNull { it.asSafeJsonObject()?.safeGetString("name") },
