@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.vacancy.FragmentVacancy"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
 
     <include
         android:id="@+id/included_top_bar"
@@ -135,79 +136,16 @@
                 app:layout_constraintTop_toBottomOf="@id/value_work_format"/>
 
             <TextView
-                android:id="@+id/header_responsibilities"
-                style="@style/text_font_m"
+                android:id="@+id/value_description"
+                style="@style/text_font_s"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/vacancy_header_responsibilities"
+                tools:text="[description]"
                 android:textColor="?attr/colorOnPrimary"
-                android:layout_marginTop="@dimen/margin16"
 
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
                 app:layout_constraintTop_toBottomOf="@id/header_description"/>
-
-            <TextView
-                android:id="@+id/value_responsibilities"
-                style="@style/text_font_s"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:text="[responsibilities]"
-                android:textColor="?attr/colorOnPrimary"
-
-                app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/header_responsibilities"/>
-
-            <TextView
-                android:id="@+id/header_requirements"
-                style="@style/text_font_m"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/vacancy_header_requirements"
-                android:textColor="?attr/colorOnPrimary"
-                android:layout_marginTop="@dimen/margin16"
-
-                app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/value_responsibilities"/>
-
-            <TextView
-                android:id="@+id/value_requirements"
-                style="@style/text_font_s"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:text="[requirements]"
-                android:textColor="?attr/colorOnPrimary"
-
-                app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/header_requirements"/>
-
-            <TextView
-                android:id="@+id/header_conditions"
-                style="@style/text_font_m"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/vacancy_header_conditions"
-                android:textColor="?attr/colorOnPrimary"
-                android:layout_marginTop="@dimen/margin16"
-
-                app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/value_requirements"/>
-
-            <TextView
-                android:id="@+id/value_conditions"
-                style="@style/text_font_s"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:text="[conditions]"
-                android:textColor="?attr/colorOnPrimary"
-
-                app:layout_constraintStart_toStartOf="@id/leftGuideline"
-                app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/header_conditions"/>
 
             <TextView
                 android:id="@+id/header_skills"
@@ -217,10 +155,11 @@
                 android:text="@string/vacancy_header_skills"
                 android:textColor="?attr/colorOnPrimary"
                 android:layout_marginTop="24dp"
+                android:visibility="gone"
 
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-                app:layout_constraintTop_toBottomOf="@id/value_conditions"/>
+                app:layout_constraintTop_toBottomOf="@id/value_description"/>
 
             <TextView
                 android:id="@+id/value_skills"
@@ -230,6 +169,7 @@
                 tools:text="[skills]"
                 android:textColor="?attr/colorOnPrimary"
                 android:layout_marginTop="@dimen/margin16"
+                android:visibility="gone"
 
                 app:layout_constraintStart_toStartOf="@id/leftGuideline"
                 app:layout_constraintEnd_toEndOf="@id/rightGuideline"
