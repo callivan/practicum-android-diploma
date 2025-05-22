@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,10 +76,14 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showLoading() {
-        // Скоро будет
+        binding.includedProgressBar.searchProgressBar.isVisible = true
+        binding.contentView.isVisible = false
     }
 
     private fun showContent(vacancy: VacancyDetails) {
+        binding.includedProgressBar.searchProgressBar.isVisible = false
+        binding.contentView.isVisible = true
+
         binding.vacancyName.text = vacancy.name
     }
 
