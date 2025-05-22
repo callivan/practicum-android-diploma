@@ -21,6 +21,7 @@ const val INPUT_DELAY = 2000L
 
 class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
     private var pages: Int? = null
+    private var vacancy: String? = null
 
     private var prevSearchVacancies: MutableList<VacancyShort> = mutableListOf()
 
@@ -44,9 +45,12 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                inputDebouncer(VacanciesRequest(text = s.toString()))
-                prevSearchVacancies.clear()
-                pages = null
+                if (vacancy != s.toString()) {
+                    inputDebouncer(VacanciesRequest(text = s.toString()))
+                    prevSearchVacancies.clear()
+                    pages = null
+                    vacancy = s.toString()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -85,7 +89,11 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
         return state
     }
 
-    fun getVacancies(req: VacanciesRequest) {
+    fun loadMore(page: Int?) {
+        getVacancies(VacanciesRequest(text = vacancy ?: "", page = page))
+    }
+
+    private fun getVacancies(req: VacanciesRequest) {
         if (req.text.isEmpty()) {
             screenState.postValue(ScreenState.Init)
             return

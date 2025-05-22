@@ -48,8 +48,8 @@ class FragmentFavotite : Fragment() {
             when (state) {
                 is ScreenState.Loading -> showLoading()
                 is ScreenState.Success -> {
-                    //showContent(state.data)
-                    showEmptyState() //delete
+                    // showContent(state.data)
+                    showEmptyState() // delete
                     binding.placeholderLayout.isVisible = true
                 }
                 is ScreenState.Empty -> showEmptyState()
@@ -83,7 +83,6 @@ class FragmentFavotite : Fragment() {
     }
 
     private fun showContent() {
-
     }
 
     private fun showEmptyState() {
