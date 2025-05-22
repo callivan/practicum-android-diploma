@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:background="@drawable/item_vacancy_card_background">
 
@@ -11,45 +12,40 @@
         android:layout_width="48dp"
 
         android:layout_height="48dp"
-        android:layout_marginStart="@dimen/margin32"
+        android:layout_marginStart="@dimen/margin16"
         android:layout_marginTop="@dimen/margin16"
-
-        android:layout_marginBottom="@dimen/margin16"
         android:background="@drawable/item_vacancy_card"
 
         android:backgroundTint="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/titleVacancyCard"
+        style="@style/text_font_l"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin8"
-        app:layout_constraintBottom_toBottomOf="@+id/imageVacancyCard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageVacancyCard"
-        app:layout_constraintTop_toTopOf="@+id/imageVacancyCard"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        tools:text="[TITLE]"
+        android:layout_marginHorizontal="@dimen/margin8"
 
-        <TextView
-            android:id="@+id/titleVacancyCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@id/imageVacancyCard"
+        app:layout_constraintBottom_toTopOf="@id/cityVacancyCard"
+        app:layout_constraintStart_toEndOf="@id/imageVacancyCard"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-            android:text="TITLE"
+    <TextView
+        android:id="@+id/cityVacancyCard"
+        style="@style/text_font_s"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        tools:text="[city]"
+        android:paddingBottom="@dimen/margin16"
 
-            style="@style/text_font_l"/>
-
-        <TextView
-            android:id="@+id/cityVacancyCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:text="city"
-
-            style="@style/text_font_s"/>
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/titleVacancyCard"
+        app:layout_constraintStart_toStartOf="@id/titleVacancyCard"
+        app:layout_constraintEnd_toEndOf="@id/titleVacancyCard"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
