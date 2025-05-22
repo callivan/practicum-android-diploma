@@ -237,4 +237,9 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/included_err"
+        layout="@layout/screen_placeholder"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -44,6 +44,9 @@ class FragmentVacancy : Fragment() {
         binding.includedTopBar.btnSecond.setImageResource(R.drawable.sharing_24px)
         binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
 
+        binding.includedErr.placeholderImage.setImageResource(R.drawable.err_no_vacancy)
+        binding.includedErr.placeholderText.text = requireContext().getString(R.string.err_no_vacancy)
+
         binding.includedTopBar.btnFirst.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -72,17 +75,21 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showError() {
-        // Скоро будет
+        binding.includedProgressBar.root.isVisible = false
+        binding.contentView.isVisible = false
+        binding.includedErr.root.isVisible = true
     }
 
     private fun showLoading() {
-        binding.includedProgressBar.searchProgressBar.isVisible = true
+        binding.includedProgressBar.root.isVisible = true
         binding.contentView.isVisible = false
+        binding.includedErr.root.isVisible = false
     }
 
     private fun showContent(vacancy: VacancyDetails) {
-        binding.includedProgressBar.searchProgressBar.isVisible = false
+        binding.includedProgressBar.root.isVisible = false
         binding.contentView.isVisible = true
+        binding.includedErr.root.isVisible = false
 
         binding.vacancyName.text = vacancy.name
     }
