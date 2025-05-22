@@ -6,16 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavotiteBinding
+import ru.practicum.android.diploma.domain.models.VacancyDetails
+import ru.practicum.android.diploma.presentation.favorite.FavoriteVacancyAdapter
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
 import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy
 
 class FragmentFavotite : Fragment() {
     private var _binding: FragmentFavotiteBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<FavoriteViewModule>()
+    private var adapter: FavoriteVacancyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +37,9 @@ class FragmentFavotite : Fragment() {
 
         setupToolbar()
         observeViewModel()
+        setupRecyclerView()
         viewModel.getFavoriteVacancies()
+
     }
 
     private fun setupToolbar() {
@@ -43,13 +51,27 @@ class FragmentFavotite : Fragment() {
         }
     }
 
+    private fun setupRecyclerView() {
+        adapter = FavoriteVacancyAdapter(emptyList(), object : FavoriteVacancyAdapter.OnVacancyClickListener {
+            override fun onClick(vacancy: VacancyDetails) {
+                findNavController().navigate(
+                    R.id.action_fragmentFavotite_to_fragmentVacancy,
+                    Bundle().apply {
+                        putString(FragmentVacancy.ID_VACANCY, vacancy.id)
+                    }
+                )
+            }
+        })
+        binding.favouriteList.layoutManager = LinearLayoutManager(requireContext())
+        binding.favouriteList.adapter = adapter
+    }
+
     private fun observeViewModel() {
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Loading -> showLoading()
                 is ScreenState.Success -> {
-                    // showContent(state.data)
-                    showEmptyState() // delete
+                    showContent(state.data)
                     binding.placeholderLayout.isVisible = true
                 }
                 is ScreenState.Empty -> showEmptyState()
@@ -82,7 +104,15 @@ class FragmentFavotite : Fragment() {
         }
     }
 
-    private fun showContent() {
+    private fun showContent(vacancies: List<VacancyDetails>) {
+        with(binding) {
+            loader.isVisible = false
+            favouriteList.isVisible = true
+            placeholderLayout.isVisible = false
+            placeholderImage.isVisible = false
+            placeholderText.isVisible = false
+            adapter?.updateList(vacancies)
+        }
     }
 
     private fun showEmptyState() {
