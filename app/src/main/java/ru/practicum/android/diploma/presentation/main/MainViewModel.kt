@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.ResponseStatus
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
@@ -36,7 +35,10 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
     fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(
-                s: CharSequence?, start: Int, count: Int, after: Int
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
             ) {
                 // empty
             }
@@ -71,9 +73,11 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
 
                 pages = state.pages
 
-
                 return VacanciesResponse(
-                    items = items, page = state.page, pages = state.pages, found = state.found
+                    items = items,
+                    page = state.page,
+                    pages = state.pages,
+                    found = state.found
                 )
             }
         }
@@ -82,7 +86,6 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
     }
 
     fun getVacancies(req: VacanciesRequest) {
-
         if (req.text.isEmpty()) {
             screenState.postValue(ScreenState.Init)
             return

@@ -19,7 +19,7 @@ class EndReachedListener(
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-        if ((visibleItemCount + firstVisibleItemPosition + threshold) >= totalItemCount) {
+        if (visibleItemCount + firstVisibleItemPosition + threshold >= totalItemCount) {
             isLoading = true
             onEndReached()
         }
