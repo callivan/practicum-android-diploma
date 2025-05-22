@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.presentation.models
 
 sealed interface ScreenState<out T> {
+    object Init : ScreenState<Nothing>
     object Loading : ScreenState<Nothing>
     data class Success<T>(val data: T) : ScreenState<T>
     data class Insert(val isInserted: Boolean) : ScreenState<Nothing>

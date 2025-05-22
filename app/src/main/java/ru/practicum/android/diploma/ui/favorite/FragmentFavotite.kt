@@ -71,7 +71,6 @@ class FragmentFavotite : Fragment() {
                 is ScreenState.Loading -> showLoading()
                 is ScreenState.Success -> {
                     showContent(state.data)
-                    // showEmptyState() //delete
                     binding.placeholderLayout.isVisible = true
                 }
                 is ScreenState.Empty -> showEmptyState()
