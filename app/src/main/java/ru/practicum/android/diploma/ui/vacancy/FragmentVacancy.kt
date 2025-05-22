@@ -24,6 +24,9 @@ class FragmentVacancy : Fragment() {
 
     val viewModel by viewModel<VacancyViewModel>()
 
+    private lateinit var currentVacancy: VacancyDetails
+    private var isFavorite: Boolean = false // Временно
+
     private var _binding: FragmentVacancyBinding? = null
     private val binding
         get() = _binding!!
@@ -53,6 +56,21 @@ class FragmentVacancy : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
+        }
+
+        binding.includedTopBar.btnSecond.setOnClickListener {
+            // Скоро будет
+        }
+
+        binding.includedTopBar.btnThird.setOnClickListener {
+            if (isFavorite) {
+                viewModel.deleteFromFavoriteById(currentVacancy.id)
+                isFavorite = false
+            }
+            else {
+                viewModel.insertInFavorite(currentVacancy)
+                isFavorite = true
+            }
         }
 
         viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
@@ -91,14 +109,15 @@ class FragmentVacancy : Fragment() {
         binding.contentView.isVisible = true
         binding.includedErr.root.isVisible = false
 
+        currentVacancy = vacancy
         binding.vacancyName.text = vacancy.name
     }
 
     private fun onDeleteFromFavorite() {
-        // Скоро будет
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
     }
 
     private fun onInsertFromFavorite() {
-        // Скоро будет
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
     }
 }
