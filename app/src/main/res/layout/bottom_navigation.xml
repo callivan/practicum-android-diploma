@@ -16,5 +16,6 @@
     app:itemTextColor="@drawable/bottom_menu_item"
     app:itemHorizontalTranslationEnabled="true"
     app:itemPaddingBottom="30dp"
+    app:itemRippleColor="@null"
     app:itemActiveIndicatorStyle="@null"
     app:menu="@menu/bottom_navigation" />
