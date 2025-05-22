@@ -11,6 +11,9 @@ import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.ui.favorite.FavoriteVacancyAdapter
 import ru.practicum.android.diploma.util.DpToPx
 
+const val CORNER_RADIUS_L = 100F
+const val CORNER_RADIUS_S = 12f
+
 class FavoriteVacancyViewHolder(
     private val view: View,
     private val listener: FavoriteVacancyAdapter.OnVacancyClickListener
@@ -24,8 +27,8 @@ class FavoriteVacancyViewHolder(
         Glide.with(view.context)
             .load(model.logo)
             .placeholder(R.drawable.placeholder_32px)
-            .override(DpToPx.dpToPx(100F, view.context), DpToPx.dpToPx(100F, view.context))
-            .transform(RoundedCorners(DpToPx.dpToPx(12F, view.context)))
+            .override(DpToPx.dpToPx(CORNER_RADIUS_L, view.context), DpToPx.dpToPx(CORNER_RADIUS_L, view.context))
+            .transform(RoundedCorners(DpToPx.dpToPx(CORNER_RADIUS_S, view.context)))
             .into(logoView)
 
         headerView.text = model.name

@@ -71,13 +71,13 @@ class FragmentMain : Fragment() {
     }
 
     private fun setupSearch() {
-        binding.editTextInput.editTextSearch.apply  {
+        binding.editTextInput.editTextSearch.apply {
             addTextChangedListener(viewModel.getTextWatcher())
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    if(!s.isNullOrEmpty()){
+                    if (!s.isNullOrEmpty()) {
                         binding.editTextInput.clearIcon.isVisible = true
-                    } else{
+                    } else {
                         binding.editTextInput.clearIcon.isVisible = false
                     }
                 }
@@ -87,7 +87,7 @@ class FragmentMain : Fragment() {
         }
     }
 
-    fun exit(){
+    fun exit() {
         binding.editTextInput.clearIcon.setOnClickListener {
             binding.editTextInput.editTextSearch.text.clear()
             binding.listVacancies.isVisible = false
@@ -99,7 +99,6 @@ class FragmentMain : Fragment() {
         }
 
     }
-
 
     private fun observeViewModel() {
         lifecycleScope.launch {
@@ -129,7 +128,7 @@ class FragmentMain : Fragment() {
             is ScreenState.Empty -> {
                 binding.placeholderImage.setImageResource(R.drawable.placeholder_search)
             }
-            is ScreenState.NetworkError ->{
+            is ScreenState.NetworkError -> {
                 showErrorState(getString(R.string.err_no_connection))
                 binding.placeholderImage.setImageResource(R.drawable.err_no_connection)
             }

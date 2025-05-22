@@ -12,9 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavotiteBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetails
-import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
-import ru.practicum.android.diploma.presentation.main.VacancyAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy
 
@@ -22,8 +20,7 @@ class FragmentFavotite : Fragment() {
     private var _binding: FragmentFavotiteBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<FavoriteViewModule>()
-    private lateinit var adapter: FavoriteVacancyAdapter
-
+    private var adapter: FavoriteVacancyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +71,7 @@ class FragmentFavotite : Fragment() {
                 is ScreenState.Loading -> showLoading()
                 is ScreenState.Success -> {
                     showContent(state.data)
-                        // showEmptyState() //delete
+                    // showEmptyState() //delete
                     binding.placeholderLayout.isVisible = true
                 }
                 is ScreenState.Empty -> showEmptyState()
@@ -114,7 +111,7 @@ class FragmentFavotite : Fragment() {
             placeholderLayout.isVisible = false
             placeholderImage.isVisible = false
             placeholderText.isVisible = false
-            adapter.updateList(vacancies)
+            adapter?.updateList(vacancies)
         }
     }
 
