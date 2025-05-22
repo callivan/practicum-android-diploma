@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.vacancy
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -147,7 +148,7 @@ class FragmentVacancy : Fragment() {
             val currency = Currency.getInstance(currencyCode)
             currency.symbol
         } catch (e: IllegalArgumentException) {
-            // Если код валюты неверный, вернуть сам код
+            Log.e("currencyCode", "Invalid code")
             currencyCode
         }
     }
