@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.VacancyDetails
-import ru.practicum.android.diploma.ui.favorite.FavoriteVacancyAdapter
 import ru.practicum.android.diploma.util.DpToPx
 
 const val CORNER_RADIUS_L = 100F

@@ -150,7 +150,7 @@ class FragmentMain : Fragment() {
             is ScreenState.Init -> {
                 showInit()
             }
-            
+
             is ScreenState.NetworkError -> {
                 showErrorState(getString(R.string.err_no_connection))
                 binding.placeholderImage.setImageResource(R.drawable.err_no_connection)

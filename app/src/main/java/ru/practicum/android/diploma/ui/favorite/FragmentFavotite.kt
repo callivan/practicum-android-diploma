@@ -12,6 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavotiteBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetails
+import ru.practicum.android.diploma.presentation.favorite.FavoriteVacancyAdapter
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy

@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.favorite
+package ru.practicum.android.diploma.presentation.favorite
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.VacancyDetails
-import ru.practicum.android.diploma.presentation.favorite.FavoriteVacancyViewHolder
 
 class FavoriteVacancyAdapter(
     private var vacancies: List<VacancyDetails>,
