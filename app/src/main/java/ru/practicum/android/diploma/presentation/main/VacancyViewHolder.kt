@@ -8,7 +8,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.VacancyShort
-import ru.practicum.android.diploma.util.DpToPx
+import ru.practicum.android.diploma.util.FormatDpToPX
+
+const val CORNER_RADIUS_L = 100f
+const val CORNER_RADIUS_S = 12f
 
 class VacancyViewHolder(
     private val view: View,
@@ -23,8 +26,11 @@ class VacancyViewHolder(
         Glide.with(view.context)
             .load(model.logo)
             .placeholder(R.drawable.placeholder_32px)
-            .override(DpToPx.dpToPx(100F, view.context), DpToPx.dpToPx(100F, view.context))
-            .transform(RoundedCorners(DpToPx.dpToPx(12F, view.context)))
+            .override(
+                FormatDpToPX.dpToPx(CORNER_RADIUS_L, view.context),
+                FormatDpToPX.dpToPx(CORNER_RADIUS_L, view.context)
+            )
+            .transform(RoundedCorners(FormatDpToPX.dpToPx(CORNER_RADIUS_S, view.context)))
             .into(logoView)
 
         headerView.text = model.name

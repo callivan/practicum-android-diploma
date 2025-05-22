@@ -20,19 +20,13 @@ class FavoriteViewModule(private val favoriteVacanciesInteractor: FavoriteVacanc
         screenState.postValue(ScreenState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                favoriteVacanciesInteractor.getFavoriteVacancies().collect { vacancies ->
-                    withContext(Dispatchers.Main) {
-                        if (vacancies.isNotEmpty()) {
-                            screenState.postValue(ScreenState.Success(vacancies))
-                        } else {
-                            screenState.postValue(ScreenState.Empty)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
+            favoriteVacanciesInteractor.getFavoriteVacancies().collect { vacancies ->
                 withContext(Dispatchers.Main) {
-                    screenState.postValue(ScreenState.NetworkError)
+                    if (vacancies.isNotEmpty()) {
+                        screenState.postValue(ScreenState.Success(vacancies))
+                    } else {
+                        screenState.postValue(ScreenState.Empty)
+                    }
                 }
             }
         }

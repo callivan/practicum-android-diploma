@@ -138,7 +138,7 @@ class FragmentVacancy : Fragment() {
         binding.valueDescription.text = HtmlCompat.fromHtml(vacancy.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
         if (vacancy.keySkills != null) {
             binding.valueSkills.text = vacancy.keySkills.joinToString("\n") { "• $it" }
-            binding.headerSkills.isVisible = true
+            binding.headerSkills.isVisible = vacancy.keySkills.isNotEmpty()
             binding.valueSkills.isVisible = true
         }
     }
