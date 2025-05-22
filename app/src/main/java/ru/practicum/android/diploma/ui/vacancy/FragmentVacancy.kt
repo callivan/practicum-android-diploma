@@ -24,7 +24,7 @@ class FragmentVacancy : Fragment() {
 
     val viewModel by viewModel<VacancyViewModel>()
 
-    private lateinit var currentVacancy: VacancyDetails
+    private var currentVacancy: VacancyDetails? = null
     private var isFavorite: Boolean = false // Временно
 
     private var _binding: FragmentVacancyBinding? = null
@@ -64,11 +64,10 @@ class FragmentVacancy : Fragment() {
 
         binding.includedTopBar.btnThird.setOnClickListener {
             if (isFavorite) {
-                viewModel.deleteFromFavoriteById(currentVacancy.id)
+                viewModel.deleteFromFavoriteById(currentVacancy!!.id)
                 isFavorite = false
-            }
-            else {
-                viewModel.insertInFavorite(currentVacancy)
+            } else {
+                viewModel.insertInFavorite(currentVacancy!!)
                 isFavorite = true
             }
         }
