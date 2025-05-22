@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.ui.main
 
+import EndReachedListener
+import addEndReachedListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
+import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.VacanciesResponse
 import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.main.MainViewModel
@@ -26,7 +29,11 @@ class FragmentMain : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<MainViewModel>()
-    private lateinit var vacancyAdapter: VacancyAdapter
+    private var vacancyAdapter: VacancyAdapter? = null
+    private var endReachedListener: EndReachedListener? = null
+    private var vacancy: String? = null
+    private var page = 0
+    private var isSearchNextPage = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,10 +75,19 @@ class FragmentMain : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
         }
+
+        endReachedListener = binding.listVacancies.addEndReachedListener(
+            layoutManager = LinearLayoutManager(requireContext())
+        ) {
+            page = page + 1
+            isSearchNextPage = true
+
+            viewModel.getVacancies(VacanciesRequest(text = vacancy ?: "", page = page))
+        }
     }
 
     private fun setupSearch() {
-        binding.editTextInput.editTextSearch.apply  {
+        binding.editTextInput.editTextSearch.apply {
             addTextChangedListener(viewModel.getTextWatcher())
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -81,13 +97,17 @@ class FragmentMain : Fragment() {
                         binding.editTextInput.clearIcon.isVisible = false
                     }
                 }
+
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    vacancy = s.toString()
+                    isSearchNextPage = false
+                }
             })
         }
     }
 
-    fun exit(){
+    fun exit() {
         binding.editTextInput.clearIcon.setOnClickListener {
             binding.editTextInput.editTextSearch.text.clear()
             binding.listVacancies.isVisible = false
@@ -99,7 +119,6 @@ class FragmentMain : Fragment() {
         }
 
     }
-
 
     private fun observeViewModel() {
         lifecycleScope.launch {
@@ -113,32 +132,40 @@ class FragmentMain : Fragment() {
         when (state) {
             is ScreenState.Loading -> showLoading()
             is ScreenState.Success -> {
-                if (state.data.items.isEmpty()) {
-                    showEmptyState(getString(R.string.err_load_vacancy_list))
-                    binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
-                } else {
-                    showResults(state.data)
-                    binding.button.isVisible = true
-                    binding.button.text = resources.getQuantityString(
-                        R.plurals.vacancies_found,
-                        state.data.found,
-                        state.data.found
-                    )
-                }
+                showResults(state.data)
+                binding.button.isVisible = true
+                binding.button.text = resources.getQuantityString(
+                    R.plurals.vacancies_found,
+                    state.data.found,
+                    state.data.found
+                )
+
+                val isHasMoreVacancies = state.data.page <= state.data.pages
+
+                endReachedListener?.endReachedProcessed(isHasMoreVacancies)
             }
+
             is ScreenState.Empty -> {
-                binding.placeholderImage.setImageResource(R.drawable.placeholder_search)
+                showEmptyState(getString(R.string.err_load_vacancy_list))
+                binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
             }
-            is ScreenState.NetworkError ->{
+
+            is ScreenState.Init -> {
+                showInit()
+            }
+
+            is ScreenState.NetworkError -> {
                 showErrorState(getString(R.string.err_no_connection))
                 binding.placeholderImage.setImageResource(R.drawable.err_no_connection)
             }
+
             is ScreenState.NotFound -> {
                 showEmptyState(getString(R.string.err_load_vacancy_list))
                 binding.button.text = "Таких вакансий нет"
                 binding.button.isVisible = true
                 binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
             }
+
             else -> {
                 showEmptyState(getString(R.string.err_load_vacancy_list))
                 binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
@@ -148,10 +175,21 @@ class FragmentMain : Fragment() {
 
     private fun showLoading() {
         binding.apply {
-            listVacancies.isVisible = false
+            listVacancies.isVisible = isSearchNextPage
             loader.isVisible = true
             placeholderLayout.isVisible = false
-            button.isVisible = false
+            button.isVisible = isSearchNextPage
+        }
+    }
+
+    private fun showInit() {
+        binding.apply {
+            listVacancies.isVisible = false
+            loader.isVisible = false
+            placeholderLayout.isVisible = true
+            button.isVisible = isSearchNextPage
+
+            placeholderImage.setImageResource(R.drawable.placeholder_search)
         }
     }
 
@@ -162,7 +200,7 @@ class FragmentMain : Fragment() {
             placeholderLayout.isVisible = false
         }
         viewModel.getScreenState()
-        vacancyAdapter.updateList(data.items)
+        vacancyAdapter?.updateList(data.items)
     }
 
     private fun showEmptyState(message: String) {
