@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.ResponseStatus
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
@@ -24,8 +25,9 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
 
     private var prevSearchVacancies: MutableList<VacancyShort> = mutableListOf()
 
-    private val inputDebouncer =
-        debounce<VacanciesRequest>(INPUT_DELAY, viewModelScope, true) { req -> getVacancies(req) }
+    private val inputDebouncer = debounce<VacanciesRequest>(INPUT_DELAY, viewModelScope, true) { req ->
+        getVacancies(req)
+    }
 
     private val screenState = MutableLiveData<ScreenState<VacanciesResponse>>(ScreenState.Init)
 
@@ -40,11 +42,9 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) {
-                    inputDebouncer(VacanciesRequest(text = s.toString()))
-                    prevSearchVacancies.clear()
-                    pages = null
-                }
+                inputDebouncer(VacanciesRequest(text = s.toString()))
+                prevSearchVacancies.clear()
+                pages = null
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -53,11 +53,42 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
         }
     }
 
-    fun getVacancies(req: VacanciesRequest) {
+    private fun isPageEnded(page: Int?): Boolean {
         val newPages = pages
-        val newPage = req.page
+        val newPage = page
 
-        if (newPages != null && newPage != null && newPages <= newPage) return
+        return newPages != null && newPage != null && newPages <= newPage
+    }
+
+    private fun setSuccessState(state: VacanciesResponse): VacanciesResponse {
+        if (state.items.isNotEmpty()) {
+            if (prevSearchVacancies.isEmpty()) {
+                prevSearchVacancies += state.items
+            } else {
+                val items = prevSearchVacancies
+
+                items += state.items
+
+                pages = state.pages
+
+
+                return VacanciesResponse(
+                    items = items, page = state.page, pages = state.pages, found = state.found
+                )
+            }
+        }
+
+        return state
+    }
+
+    fun getVacancies(req: VacanciesRequest) {
+
+        if (req.text.isEmpty()) {
+            screenState.postValue(ScreenState.Init)
+            return
+        }
+
+        if (isPageEnded(req.page)) return
 
         screenState.postValue(ScreenState.Loading)
 
@@ -65,30 +96,8 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
             vacanciesInteractor.getVacancies(req).collect { state ->
                 when (state) {
                     is ResponseStatus.Success -> {
-
                         if (state.data.items.isNotEmpty()) {
-                            if (prevSearchVacancies.isEmpty()) {
-                                prevSearchVacancies += state.data.items
-
-                                screenState.postValue(state.toScreenState())
-                            } else {
-                                val items = prevSearchVacancies
-
-                                items += state.data.items
-
-                                pages = state.data.pages
-
-                                screenState.postValue(
-                                    ScreenState.Success(
-                                        VacanciesResponse(
-                                            items = items,
-                                            page = state.data.page,
-                                            pages = state.data.pages,
-                                            found = state.data.found
-                                        )
-                                    )
-                                )
-                            }
+                            screenState.postValue(ScreenState.Success(setSuccessState(state.data)))
                         } else {
                             screenState.postValue(ScreenState.Empty)
                         }
