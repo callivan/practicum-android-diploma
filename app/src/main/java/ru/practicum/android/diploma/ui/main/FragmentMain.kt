@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
-import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.VacanciesResponse
 import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.main.MainViewModel
@@ -31,7 +30,6 @@ class FragmentMain : Fragment() {
     private val viewModel by viewModel<MainViewModel>()
     private var vacancyAdapter: VacancyAdapter? = null
     private var endReachedListener: EndReachedListener? = null
-    private var vacancy: String? = null
     private var page = 0
     private var isSearchNextPage = false
 
@@ -82,7 +80,7 @@ class FragmentMain : Fragment() {
             page = page + 1
             isSearchNextPage = true
 
-            viewModel.getVacancies(VacanciesRequest(text = vacancy ?: "", page = page))
+            viewModel.loadMore(page)
         }
     }
 
@@ -91,16 +89,15 @@ class FragmentMain : Fragment() {
             addTextChangedListener(viewModel.getTextWatcher())
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    if(!s.isNullOrEmpty()){
+                    if (!s.isNullOrEmpty()) {
                         binding.editTextInput.clearIcon.isVisible = true
-                    } else{
+                    } else {
                         binding.editTextInput.clearIcon.isVisible = false
                     }
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    vacancy = s.toString()
                     isSearchNextPage = false
                 }
             })
