@@ -57,7 +57,7 @@ class FragmentFavotite : Fragment() {
         adapter = FavoriteVacancyAdapter(emptyList(), object : FavoriteVacancyAdapter.OnVacancyClickListener {
             override fun onClick(vacancy: VacancyDetails) {
                 findNavController().navigate(
-                    R.id.action_fragmentMain_to_fragmentVacancy,
+                    R.id.action_fragmentFavotite_to_fragmentVacancy,
                     Bundle().apply {
                         putString(FragmentVacancy.ID_VACANCY, vacancy.id)
                     }
