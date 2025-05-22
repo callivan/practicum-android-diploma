@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,6 +23,7 @@ import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.main.MainViewModel
 import ru.practicum.android.diploma.presentation.main.VacancyAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy
 
 class FragmentMain : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -59,7 +61,12 @@ class FragmentMain : Fragment() {
     private fun setupRecyclerView() {
         vacancyAdapter = VacancyAdapter(emptyList(), object : VacancyAdapter.OnVacancyClickListener {
             override fun onClick(vacancy: VacancyShort) {
-                // переход на детали вакансии
+                findNavController().navigate(
+                    R.id.action_fragmentMain_to_fragmentVacancy,
+                    Bundle().apply {
+                        putString(FragmentVacancy.ID_VACANCY, vacancy.id)
+                    }
+                )
             }
         })
 
@@ -84,7 +91,11 @@ class FragmentMain : Fragment() {
             addTextChangedListener(viewModel.getTextWatcher())
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    binding.editTextInput.clearIcon.isVisible = !s.isNullOrEmpty()
+                    if(!s.isNullOrEmpty()){
+                        binding.editTextInput.clearIcon.isVisible = true
+                    } else{
+                        binding.editTextInput.clearIcon.isVisible = false
+                    }
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
@@ -39,7 +40,7 @@ class VacancyViewModel(
     }
 
     fun insertInFavorite(vacancy: VacancyDetails) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoriteVacanciesInteractor.insertFavoriteVacancy(vacancy).collect { state ->
                 screenState.postValue(ScreenState.Insert(state))
             }
@@ -47,7 +48,7 @@ class VacancyViewModel(
     }
 
     fun deleteFromFavoriteById(vacancyId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoriteVacanciesInteractor.deleteFavoriteVacancyById(vacancyId).collect { state ->
                 screenState.postValue(ScreenState.Delete(state))
             }

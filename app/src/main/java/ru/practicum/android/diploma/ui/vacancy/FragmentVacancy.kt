@@ -4,42 +4,119 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
+import ru.practicum.android.diploma.domain.models.VacancyDetails
+import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.presentation.vacancy.VacancyViewModel
+import ru.practicum.android.diploma.util.isConnected
 
 class FragmentVacancy : Fragment() {
 
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    companion object {
+        const val ID_VACANCY = "id_vacancy"
     }
+
+    val viewModel by viewModel<VacancyViewModel>()
+
+    private var currentVacancy: VacancyDetails? = null
+    private var isFavorite: Boolean = false // Временно
+
+    private var _binding: FragmentVacancyBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_vacancy, container, false)
+        _binding = FragmentVacancyBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        fun newInstance(param1: String, param2: String) =
-            FragmentVacancy().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        binding.includedTopBar.header.text = requireContext().getString(R.string.vacancy_screen_header)
+        binding.includedTopBar.btnSecond.setImageResource(R.drawable.sharing_24px)
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+
+        binding.includedErr.placeholderImage.setImageResource(R.drawable.err_no_vacancy)
+        binding.includedErr.placeholderText.text = requireContext().getString(R.string.err_no_vacancy)
+
+        binding.includedTopBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
+
+        binding.includedTopBar.btnSecond.setOnClickListener {
+            // Скоро будет
+        }
+
+        binding.includedTopBar.btnThird.setOnClickListener {
+            if (isFavorite) {
+                viewModel.deleteFromFavoriteById(currentVacancy!!.id)
+                isFavorite = false
+            } else {
+                viewModel.insertInFavorite(currentVacancy!!)
+                isFavorite = true
             }
+        }
+
+        viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
+
+        viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                ScreenState.Empty -> { showError() }
+                ScreenState.Loading -> { showLoading() }
+                is ScreenState.Success -> { showContent(state.data) }
+                is ScreenState.Delete -> { onDeleteFromFavorite() }
+                is ScreenState.Insert -> { onInsertFromFavorite() }
+                else -> Unit
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun showError() {
+        binding.includedProgressBar.root.isVisible = false
+        binding.contentView.isVisible = false
+        binding.includedErr.root.isVisible = true
+    }
+
+    private fun showLoading() {
+        binding.includedProgressBar.root.isVisible = true
+        binding.contentView.isVisible = false
+        binding.includedErr.root.isVisible = false
+    }
+
+    private fun showContent(vacancy: VacancyDetails) {
+        binding.includedProgressBar.root.isVisible = false
+        binding.contentView.isVisible = true
+        binding.includedErr.root.isVisible = false
+
+        currentVacancy = vacancy
+        binding.vacancyName.text = vacancy.name
+    }
+
+    private fun onDeleteFromFavorite() {
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+    }
+
+    private fun onInsertFromFavorite() {
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
     }
 }
