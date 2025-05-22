@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.presentation.models.ScreenState
@@ -36,6 +39,18 @@ class FragmentVacancy : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.includedTopBar.header.text = requireContext().getString(R.string.vacancy_screen_header)
+        binding.includedTopBar.btnSecond.setImageResource(R.drawable.sharing_24px)
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+
+        binding.includedTopBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
+
         viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
 
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
@@ -56,11 +71,11 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showError() {
-        //TODO
+        // Скоро будет
     }
 
     private fun showLoading() {
-        //TODO
+        // Скоро будет
     }
 
     private fun showContent(vacancy: VacancyDetails) {
@@ -68,10 +83,10 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun onDeleteFromFavorite() {
-        //TODO
+        // Скоро будет
     }
 
     private fun onInsertFromFavorite() {
-        //TODO
+        // Скоро будет
     }
 }

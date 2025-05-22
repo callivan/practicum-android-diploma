@@ -24,6 +24,7 @@
         <item quantity="other">Найдено %d вакансий</item>
     </plurals>
 
+    <string name="vacancy_screen_header">Вакансия</string>
     <string name="vacancy_header_exp">Требуемый опыт</string>
     <string name="vacancy_header_description">Описание вакансии</string>
     <string name="vacancy_header_responsibilities">Обязанности</string>
