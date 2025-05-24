@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="page_main">Главная</string>
     <string name="page_favorite">Избранное</string>
     <string name="page_team">Команда</string>
@@ -9,4 +8,29 @@
     <string name="page_team_worker_2">Участник 2</string>
     <string name="page_team_worker_3">Участник 3</string>
     <string name="page_team_worker_4">Участник 4</string>
+    <string name="err_no_connection">Нет интернета</string>
+    <string name="err_load_vacancy_list">Не удалось получить\nсписок вакансий</string>
+    <string name="err_cant_find_region">Такого региона нет</string>
+    <string name="err_load_list">Не удалось получить\nсписок</string>
+    <string name="err_server">Ошибка сервера</string>
+    <string name="err_empty_list">Список пуст</string>
+    <string name="err_no_vacancy">Вакансия не найдена или\nудалена</string>
+
+    <plurals name="vacancies_found">
+        <item quantity="one">Найдена %d вакансия</item>
+        <item quantity="few">Найдено %d вакансии</item>
+        <item quantity="many">Найдено %d вакансий</item>
+        <item quantity="other">Найдено %d вакансий</item>
+    </plurals>
+
+    <string name="vacancies_search">Поиск вакансий</string>
+    <string name="vacancies_not_found">Таких вакансий нет</string>
+    <string name="vacancy_screen_header">Вакансия</string>
+    <string name="vacancy_header_exp">Требуемый опыт</string>
+    <string name="vacancy_header_description">Описание вакансии</string>
+    <string name="vacancy_header_responsibilities">Обязанности</string>
+    <string name="vacancy_header_requirements">Требования</string>
+    <string name="vacancy_header_conditions">Условия</string>
+    <string name="vacancy_header_skills">Ключевые навыки</string>
+
 </resources>

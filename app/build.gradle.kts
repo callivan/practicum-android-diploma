@@ -1,7 +1,3 @@
-object SDKVersion {
-    const val MIN_SDK_VERSION = 28
-}
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "ru.practicum.android.diploma"
-        minSdk = SDKVersion.MIN_SDK_VERSION
+        minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +48,7 @@ dependencies {
     // UI layer libraries
     implementation(libs.ui.material)
     implementation(libs.ui.constraintLayout)
+    implementation(libs.activity)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
@@ -62,25 +59,25 @@ dependencies {
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.github.bumptech.glide:glide:4.14.2")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
-    implementation("com.google.code.gson:gson:2.10")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("io.insert-koin:koin-android:3.3.0")
-    implementation("androidx.fragment:fragment-ktx:1.5.5")
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("androidx.fragment:fragment-ktx:1.5.6")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("androidx.room:room-runtime:2.6.1")
-    ksp("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("com.markodevcic:peko:3.0.5")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation(libs.core.ktx.v1160)
+    implementation(libs.appcompat.v170)
+    implementation(libs.constraintlayout.v221)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.core.ktx.v1160)
+    implementation(libs.koin.android)
+    implementation(libs.fragment.ktx)
+    implementation(libs.viewpager2)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.peko)
+    implementation(libs.material.v1120)
 }
