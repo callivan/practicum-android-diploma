@@ -9,11 +9,11 @@ import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 
 val interactorModule = module {
-    single<VacanciesInteractor> {
+    factory<VacanciesInteractor> {
         VacanciesInteractorImpl(get<VacanciesRepository>())
     }
 
-    single<FavoriteVacanciesInteractor> {
+    factory<FavoriteVacanciesInteractor> {
         FavoriteVacanciesInteractorImpl(get<FavoriteVacanciesRepository>())
     }
 }

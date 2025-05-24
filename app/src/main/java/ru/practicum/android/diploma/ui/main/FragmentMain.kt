@@ -50,7 +50,7 @@ class FragmentMain : Fragment() {
         observeViewModel()
         exit()
 
-        binding.topBarItem.header.text = "Поиск вакансий"
+        binding.topBarItem.header.text = getString(R.string.vacancies_search)
         binding.topBarItem.btnFirst.isVisible = false
         binding.topBarItem.btnSecond.isVisible = false
         binding.topBarItem.btnThird.setImageResource(R.drawable.filter_off__24px)
@@ -96,7 +96,10 @@ class FragmentMain : Fragment() {
                     }
                 }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Empty
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     isSearchNextPage = false
                 }
@@ -158,7 +161,7 @@ class FragmentMain : Fragment() {
 
             is ScreenState.NotFound -> {
                 showEmptyState(getString(R.string.err_load_vacancy_list))
-                binding.button.text = "Таких вакансий нет"
+                binding.button.text = getString(R.string.vacancies_not_found)
                 binding.button.isVisible = true
                 binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
             }

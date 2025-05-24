@@ -1,9 +1,9 @@
 package ru.practicum.android.diploma.util
 
 import retrofit2.Response
-import ru.practicum.android.diploma.consts.ResponseCode
 import ru.practicum.android.diploma.data.dto.ResponseStatusDto
 import java.io.IOException
+import java.net.HttpURLConnection
 
 suspend fun <T> safeApiCall(
     apiCall: suspend () -> Response<T>
@@ -12,7 +12,7 @@ suspend fun <T> safeApiCall(
         val response = apiCall()
 
         when (response.code()) {
-            ResponseCode.SUCCESS -> {
+            HttpURLConnection.HTTP_OK -> {
                 val body = response.body()
                 if (body != null) {
                     ResponseStatusDto.Success(body)
@@ -21,10 +21,10 @@ suspend fun <T> safeApiCall(
                 }
             }
 
-            ResponseCode.BAD_REQUEST -> ResponseStatusDto.BadRequest
-            ResponseCode.FORBIDDEN -> ResponseStatusDto.Forbidden
-            ResponseCode.NOT_FOUND -> ResponseStatusDto.NotFound
-            ResponseCode.INTERNAL_SERVER_ERROR -> ResponseStatusDto.InternalServerError
+            HttpURLConnection.HTTP_BAD_REQUEST -> ResponseStatusDto.BadRequest
+            HttpURLConnection.HTTP_FORBIDDEN -> ResponseStatusDto.Forbidden
+            HttpURLConnection.HTTP_NOT_FOUND -> ResponseStatusDto.NotFound
+            HttpURLConnection.HTTP_INTERNAL_ERROR -> ResponseStatusDto.InternalServerError
             else -> ResponseStatusDto.UnknownError(null)
         }
     } catch (e: IOException) {

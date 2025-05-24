@@ -7,7 +7,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.practicum.android.diploma.consts.Consts
 import ru.practicum.android.diploma.data.NetworkClient
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
@@ -21,6 +20,8 @@ import ru.practicum.android.diploma.data.interceptors.AuthInterceptor
 import ru.practicum.android.diploma.data.interceptors.InternetAvailableInterceptor
 import ru.practicum.android.diploma.data.network.HeadHunterApiServices
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
+
+const val HH_API_BASE_URL = "https://api.hh.ru"
 
 val dataModule = module {
     factory<VacancyShortDbConverter> {
@@ -44,7 +45,7 @@ val dataModule = module {
             GsonBuilder().registerTypeAdapter(VacanciesResponseDto::class.java, VacanciesResponseDeserializer())
                 .registerTypeAdapter(VacancyDetailsDto::class.java, VacancyResponseDeserializer()).create()
 
-        Retrofit.Builder().baseUrl(Consts.HH_API_BASE_URL).client(interceptors)
+        Retrofit.Builder().baseUrl(HH_API_BASE_URL).client(interceptors)
             .addConverterFactory(GsonConverterFactory.create(responseDeserializer)).build()
             .create<HeadHunterApiServices>(HeadHunterApiServices::class.java)
     }
