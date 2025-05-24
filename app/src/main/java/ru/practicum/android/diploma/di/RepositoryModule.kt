@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.domain.api.FavoriteVacanciesRepository
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
 
 val repositoryModule = module {
-    single<VacanciesRepository> {
+    factory<VacanciesRepository> {
         VacanciesRepositoryImpl(
             get<NetworkClient>(),
             get<VacancyDetailsDbConverter>(),
@@ -19,7 +19,7 @@ val repositoryModule = module {
         )
     }
 
-    single<FavoriteVacanciesRepository> {
+    factory<FavoriteVacanciesRepository> {
         FavoriteVacanciesRepositoryImpl(get<AppDb>(), get<VacancyDetailsDbConverter>())
     }
 }

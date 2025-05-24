@@ -22,12 +22,6 @@ import ru.practicum.android.diploma.util.isConnected
 import java.util.Currency
 
 class FragmentVacancy : Fragment() {
-
-    companion object {
-        const val ID_VACANCY = "id_vacancy"
-        const val IMG_CORNER = 12
-    }
-
     val viewModel by viewModel<VacancyViewModel>()
 
     private var currentVacancy: VacancyDetails? = null
@@ -49,12 +43,7 @@ class FragmentVacancy : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.includedTopBar.header.text = requireContext().getString(R.string.vacancy_screen_header)
-        binding.includedTopBar.btnSecond.setImageResource(R.drawable.sharing_24px)
-        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
-
-        binding.includedErr.placeholderImage.setImageResource(R.drawable.err_no_vacancy)
-        binding.includedErr.placeholderText.text = requireContext().getString(R.string.err_no_vacancy)
+        fillTopBar()
 
         binding.includedTopBar.btnFirst.setOnClickListener {
             findNavController().popBackStack()
@@ -81,20 +70,48 @@ class FragmentVacancy : Fragment() {
         viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
 
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                ScreenState.Empty -> { showError() }
-                ScreenState.Loading -> { showLoading() }
-                is ScreenState.Success -> { showContent(state.data) }
-                is ScreenState.Delete -> { onDeleteFromFavorite() }
-                is ScreenState.Insert -> { onInsertFromFavorite() }
-                else -> Unit
-            }
+            checkState(state)
         }
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
+    }
+
+    private fun checkState(state: ScreenState<VacancyDetails>) {
+        when (state) {
+            ScreenState.Empty -> {
+                showError()
+            }
+
+            ScreenState.Loading -> {
+                showLoading()
+            }
+
+            is ScreenState.Success -> {
+                showContent(state.data)
+            }
+
+            is ScreenState.Delete -> {
+                onDeleteFromFavorite()
+            }
+
+            is ScreenState.Insert -> {
+                onInsertFromFavorite()
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun fillTopBar() {
+        binding.includedTopBar.header.text = requireContext().getString(R.string.vacancy_screen_header)
+        binding.includedTopBar.btnSecond.setImageResource(R.drawable.sharing_24px)
+        binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+
+        binding.includedErr.placeholderImage.setImageResource(R.drawable.err_no_vacancy)
+        binding.includedErr.placeholderText.text = requireContext().getString(R.string.err_no_vacancy)
     }
 
     private fun showError() {
@@ -127,12 +144,8 @@ class FragmentVacancy : Fragment() {
         binding.vacancySalary.text = salaryString
         binding.includedVacancyCard.titleVacancyCard.text = vacancy.employer
         binding.includedVacancyCard.cityVacancyCard.text = vacancy.address?.split(',')?.get(0) ?: ""
-        Glide.with(this)
-            .load(vacancy.logo)
-            .centerCrop()
-            .placeholder(R.drawable.placeholder_32px)
-            .transform(RoundedCorners(IMG_CORNER))
-            .into(binding.includedVacancyCard.imageVacancyCard)
+        Glide.with(this).load(vacancy.logo).centerCrop().placeholder(R.drawable.placeholder_32px)
+            .transform(RoundedCorners(IMG_CORNER)).into(binding.includedVacancyCard.imageVacancyCard)
         binding.valueExp.text = vacancy.experience
         binding.valueWorkFormat.text = vacancy.workFormat?.joinToString(", ") ?: ""
         binding.valueDescription.text = HtmlCompat.fromHtml(vacancy.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -159,5 +172,10 @@ class FragmentVacancy : Fragment() {
 
     private fun onInsertFromFavorite() {
         binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
+    }
+
+    companion object {
+        const val ID_VACANCY = "id_vacancy"
+        const val IMG_CORNER = 12
     }
 }
