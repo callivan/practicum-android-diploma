@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.di
 
 import org.koin.dsl.module
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.converters.AreaDbConverter
 import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
@@ -17,7 +18,8 @@ val repositoryModule = module {
             get<NetworkClient>(),
             get<VacancyDetailsDbConverter>(),
             get<VacanciesResponseDbConverter>(),
-            get<IndustryDbConverter>()
+            get<IndustryDbConverter>(),
+            get<AreaDbConverter>()
         )
     }
 

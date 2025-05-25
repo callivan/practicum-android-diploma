@@ -3,9 +3,11 @@ package ru.practicum.android.diploma.data.network
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.converters.AreaDbConverter
 import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
+import ru.practicum.android.diploma.data.dto.AreaDto
 import ru.practicum.android.diploma.data.dto.IndustryDto
 import ru.practicum.android.diploma.data.dto.RequestTypeDto
 import ru.practicum.android.diploma.data.dto.ResponseStatusDto
@@ -14,6 +16,7 @@ import ru.practicum.android.diploma.data.dto.VacanciesResponseDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailsDto
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
 import ru.practicum.android.diploma.domain.mappers.toResponseStatus
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.ResponseStatus
 import ru.practicum.android.diploma.domain.models.VacanciesRequest
@@ -24,7 +27,8 @@ class VacanciesRepositoryImpl(
     private val networkClient: NetworkClient,
     private val vacancyDetailsDbConverter: VacancyDetailsDbConverter,
     private val vacanciesResponseDbConverter: VacanciesResponseDbConverter,
-    private val industryDbConverter: IndustryDbConverter
+    private val industryDbConverter: IndustryDbConverter,
+    private val areaDbConverter: AreaDbConverter
 ) : VacanciesRepository {
     override fun getVacancies(queries: VacanciesRequest): Flow<ResponseStatus<VacanciesResponse>> = flow {
         val res = networkClient.request(
@@ -70,9 +74,21 @@ class VacanciesRepositoryImpl(
         val res = networkClient.request(RequestTypeDto.RequestIndustries) as ResponseStatusDto<List<IndustryDto>>
 
         val data = if (res is ResponseStatusDto.Success) {
-            ResponseStatus.Success(res.data.map { industry -> industryDbConverter.map(industry) })
+            ResponseStatus.Success(res.data.map { industryDbConverter.map(it) })
         } else {
             res.toResponseStatus() as ResponseStatus<List<Industry>>
+        }
+
+        emit(data)
+    }
+
+    override fun getAreas(): Flow<ResponseStatus<List<Area>>> = flow {
+        val res = networkClient.request(RequestTypeDto.RequestAreas) as ResponseStatusDto<List<AreaDto>>
+
+        val data = if (res is ResponseStatusDto.Success) {
+            ResponseStatus.Success(res.data.map { areaDbConverter.map(it) })
+        } else {
+            res.toResponseStatus() as ResponseStatus<List<Area>>
         }
 
         emit(data)
