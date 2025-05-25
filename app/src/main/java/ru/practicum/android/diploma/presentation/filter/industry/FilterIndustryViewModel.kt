@@ -8,16 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.models.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.ResponseStatus
-import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.presentation.mappers.toScreenState
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.util.debounce
 
 private const val INPUT_DELAY = 2000L
 
-class FilterIndustryViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
+class FilterIndustryViewModel(private val industryInteractor: IndustriesInteractor) : ViewModel() {
 
     private val industries: MutableList<Industry> = mutableListOf()
 
@@ -56,7 +56,7 @@ class FilterIndustryViewModel(private val vacanciesInteractor: VacanciesInteract
         screenState.postValue(ScreenState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
-            vacanciesInteractor.getIndustries().collect { state ->
+            industryInteractor.getIndustries().collect { state ->
                 when (state) {
                     is ResponseStatus.Success -> {
                         if (state.data.isNotEmpty()) {

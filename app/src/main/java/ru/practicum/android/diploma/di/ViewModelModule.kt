@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.di
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
+import ru.practicum.android.diploma.domain.models.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
 import ru.practicum.android.diploma.presentation.filter.industry.FilterIndustryViewModel
@@ -23,6 +24,6 @@ val viewModelModule = module {
     }
 
     viewModel<FilterIndustryViewModel> {
-        FilterIndustryViewModel(get<VacanciesInteractor>())
+        FilterIndustryViewModel(get<IndustriesInteractor>())
     }
 }

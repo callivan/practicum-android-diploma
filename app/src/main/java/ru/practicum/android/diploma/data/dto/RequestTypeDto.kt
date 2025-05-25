@@ -5,4 +5,5 @@ sealed interface RequestTypeDto {
     data class RequestVacancy(val vacancyId: String) : RequestTypeDto
     object RequestIndustries : RequestTypeDto
     object RequestAreas : RequestTypeDto
+    data class RequestAreaChild(val areaId: String) : RequestTypeDto
 }
