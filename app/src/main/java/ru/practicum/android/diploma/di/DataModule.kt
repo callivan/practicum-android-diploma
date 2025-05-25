@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.converters.AreaDbConverter
 import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
@@ -35,6 +36,10 @@ val dataModule = module {
 
     factory<IndustryDbConverter> {
         IndustryDbConverter()
+    }
+
+    factory<AreaDbConverter> {
+        AreaDbConverter()
     }
 
     single<AppDb> {

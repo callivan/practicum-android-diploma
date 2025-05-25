@@ -36,6 +36,10 @@ class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServ
                 is RequestTypeDto.RequestIndustries -> {
                     safeApiCall { headHunterApiServices.getIndustries() }
                 }
+
+                is RequestTypeDto.RequestAreas -> {
+                    safeApiCall { headHunterApiServices.getAreas() }
+                }
             }
         }
     }

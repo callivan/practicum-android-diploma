@@ -8,4 +8,6 @@ interface VacanciesInteractor {
     fun getVacancyById(vacancyId: String): Flow<ResponseStatus<VacancyDetails>>
 
     fun getIndustries(): Flow<ResponseStatus<List<Industry>>>
+
+    fun gerAreas(): Flow<ResponseStatus<List<Area>>>
 }
