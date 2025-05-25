@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.domain.models.VacanciesResponse
 class VacanciesResponseDbConverter {
     fun map(response: VacanciesResponseDto): VacanciesResponse {
         return VacanciesResponse(
-            items = response.items.map { vacancy -> VacancyShortDbConverter().map(vacancy) },
+            items = response.items.map { VacancyShortDbConverter().map(it) },
             page = response.page,
             pages = response.pages,
             found = response.found
@@ -15,7 +15,7 @@ class VacanciesResponseDbConverter {
 
     fun map(response: VacanciesResponse): VacanciesResponseDto {
         return VacanciesResponseDto(
-            items = response.items.map { vacancy -> VacancyShortDbConverter().map(vacancy) },
+            items = response.items.map { VacancyShortDbConverter().map(it) },
             page = response.page,
             pages = response.pages,
             found = response.found

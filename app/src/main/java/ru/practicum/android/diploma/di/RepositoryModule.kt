@@ -8,8 +8,12 @@ import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.data.db.AppDb
 import ru.practicum.android.diploma.data.db.FavoriteVacanciesRepositoryImpl
+import ru.practicum.android.diploma.data.network.AreasRepositoryImpl
+import ru.practicum.android.diploma.data.network.IndustriesRepositoryImpl
 import ru.practicum.android.diploma.data.network.VacanciesRepositoryImpl
+import ru.practicum.android.diploma.domain.api.AreasRepository
 import ru.practicum.android.diploma.domain.api.FavoriteVacanciesRepository
+import ru.practicum.android.diploma.domain.api.IndustriesRepository
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
 
 val repositoryModule = module {
@@ -18,9 +22,15 @@ val repositoryModule = module {
             get<NetworkClient>(),
             get<VacancyDetailsDbConverter>(),
             get<VacanciesResponseDbConverter>(),
-            get<IndustryDbConverter>(),
-            get<AreaDbConverter>()
         )
+    }
+
+    factory<IndustriesRepository> {
+        IndustriesRepositoryImpl(get<NetworkClient>(), get<IndustryDbConverter>())
+    }
+
+    factory<AreasRepository> {
+        AreasRepositoryImpl(get<NetworkClient>(), get<AreaDbConverter>())
     }
 
     factory<FavoriteVacanciesRepository> {

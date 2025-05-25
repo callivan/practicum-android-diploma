@@ -2,8 +2,6 @@ package ru.practicum.android.diploma.domain.impl
 
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.domain.api.VacanciesRepository
-import ru.practicum.android.diploma.domain.models.Area
-import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.ResponseStatus
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesRequest
@@ -18,13 +16,5 @@ class VacanciesInteractorImpl(private val vacanciesRepository: VacanciesReposito
 
     override fun getVacancyById(vacancyId: String): Flow<ResponseStatus<VacancyDetails>> {
         return vacanciesRepository.getVacancyById(vacancyId)
-    }
-
-    override fun getIndustries(): Flow<ResponseStatus<List<Industry>>> {
-        return vacanciesRepository.getIndustries()
-    }
-
-    override fun gerAreas(): Flow<ResponseStatus<List<Area>>> {
-        return vacanciesRepository.getAreas()
     }
 }
