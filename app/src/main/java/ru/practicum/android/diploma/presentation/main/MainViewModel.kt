@@ -17,7 +17,7 @@ import ru.practicum.android.diploma.presentation.mappers.toScreenState
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.util.debounce
 
-const val INPUT_DELAY = 2000L
+private const val INPUT_DELAY = 2000L
 
 class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
     private var pages: Int? = null

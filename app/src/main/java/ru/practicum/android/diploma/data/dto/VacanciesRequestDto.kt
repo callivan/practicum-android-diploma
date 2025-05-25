@@ -6,7 +6,7 @@ data class VacanciesRequestDto(
     val area: String? = null,
     val salary: Int? = null,
     val onlyWithSalary: Boolean = false,
-    val professionalRole: String? = null
+    val industry: String? = null
 )
 
 fun VacanciesRequestDto.toQueryMap(): Map<String, String?> {
@@ -17,7 +17,7 @@ fun VacanciesRequestDto.toQueryMap(): Map<String, String?> {
     queries.put("area", area)
     queries.put("salary", salary?.toString())
     queries.put("only_with_salary", onlyWithSalary.toString())
-    queries.put("professional_role", professionalRole)
+    queries.put("industry", industry)
 
     return queries.filterValues { it != null }
 }

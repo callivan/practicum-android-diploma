@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyShortDbConverter
@@ -21,7 +22,7 @@ import ru.practicum.android.diploma.data.interceptors.InternetAvailableIntercept
 import ru.practicum.android.diploma.data.network.HeadHunterApiServices
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 
-const val HH_API_BASE_URL = "https://api.hh.ru"
+private const val HH_API_BASE_URL = "https://api.hh.ru"
 
 val dataModule = module {
     factory<VacancyShortDbConverter> {
@@ -31,6 +32,10 @@ val dataModule = module {
     factory<VacancyDetailsDbConverter> { VacancyDetailsDbConverter() }
 
     factory<VacanciesResponseDbConverter> { VacanciesResponseDbConverter() }
+
+    factory<IndustryDbConverter> {
+        IndustryDbConverter()
+    }
 
     single<AppDb> {
         Room.databaseBuilder(androidContext(), AppDb::class.java, "database").build()
