@@ -23,7 +23,15 @@ class FragmentFilterIndustry : Fragment() {
 
     private val viewModel by viewModel<FilterIndustryViewModel>()
 
-    private lateinit var industryAdapter: IndustryAdapter
+    private val industryAdapter by lazy {
+        IndustryAdapter { selectedIndustry ->
+            if (selectedIndustry != null) {
+                // Выбрана отрасль
+            } else {
+                // Выбор снят
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +55,7 @@ class FragmentFilterIndustry : Fragment() {
     }
 
     private fun setupView() {
-        with(binding){
+        with(binding) {
             topBar.btnFirst.isVisible = true
             topBar.btnSecond.isVisible = false
             topBar.btnThird.isVisible = false
@@ -59,24 +67,15 @@ class FragmentFilterIndustry : Fragment() {
     private fun exit() {
         binding.editText.clearIcon.setOnClickListener {
             binding.editText.editTextSearch.text.clear()
-            binding.industryList.isVisible = false
         }
 
-        binding.topBar.btnFirst.setOnClickListener{
+        binding.topBar.btnFirst.setOnClickListener {
             findNavController().popBackStack()
         }
 
     }
 
     private fun setupRecyclerView() {
-        industryAdapter = IndustryAdapter { selectedIndustry ->
-            if (selectedIndustry != null) {
-                // Выбрана отрасль
-            } else {
-                // Выбор снят
-            }
-        }
-
         binding.industryList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = industryAdapter
