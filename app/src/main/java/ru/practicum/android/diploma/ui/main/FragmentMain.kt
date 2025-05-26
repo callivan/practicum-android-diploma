@@ -54,7 +54,13 @@ class FragmentMain : Fragment() {
         binding.topBarItem.header.text = getString(R.string.vacancies_search)
         binding.topBarItem.btnFirst.isVisible = false
         binding.topBarItem.btnSecond.isVisible = false
-        binding.topBarItem.btnThird.setImageResource(R.drawable.filter_off__24px)
+        binding.topBarItem.btnThird.apply {
+            setImageResource(R.drawable.filter_off__24px)
+            setOnClickListener {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentMain_to_fragmentFilter)
+            }
+        }
     }
 
     private fun setupRecyclerView() {
