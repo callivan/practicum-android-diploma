@@ -115,6 +115,19 @@ class FragmentFilter : Fragment() {
             itemTextTop.isVisible = false
             itemText.text = requireContext().getString(R.string.filter_main_show_no_salary)
             itemIcon.setImageResource(R.drawable.check_box_off__24px)
+            itemIcon.setOnClickListener {
+                viewModel.onClickShowNoSalary()
+            }
+        }
+
+        binding.includedBtnSet.root.setOnClickListener {
+            viewModel.setFilters()
+            closeFragment()
+        }
+
+        binding.includedBtnSet.root.setOnClickListener {
+            viewModel.clearFilters()
+            closeFragment()
         }
     }
 
