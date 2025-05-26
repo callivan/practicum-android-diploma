@@ -29,15 +29,12 @@ class FragmentFilter : Fragment() {
     ): View? {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         fillView()
+        setListeners()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            closeFragment()
-        }
 
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -73,11 +70,42 @@ class FragmentFilter : Fragment() {
         }
     }
 
+    private fun setListeners() {
+        binding.includedTopBar.btnFirst.setOnClickListener {
+            closeFragment()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            closeFragment()
+        }
+
+        binding.includedPlace.itemIcon.setOnClickListener {
+            (activity as RootActivity).switchNavBarVisibility()
+            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
+        }
+
+        binding.includedIndustry.itemIcon.setOnClickListener {
+            (activity as RootActivity).switchNavBarVisibility()
+            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
+        }
+
+        binding.includedBtnSet.root.setOnClickListener {
+            viewModel.setFilters()
+            closeFragment()
+        }
+
+        binding.includedBtnSet.root.setOnClickListener {
+            viewModel.clearFilters()
+            closeFragment()
+        }
+
+        binding.includedShowNoSalary.itemIcon.setOnClickListener {
+            viewModel.onClickShowNoSalary()
+        }
+    }
+
     private fun fillView() {
         binding.includedTopBar.apply {
-            btnFirst.setOnClickListener {
-                closeFragment()
-            }
             btnSecond.isVisible = false
             btnThird.isVisible = false
             header.text = requireContext().getString(R.string.filter_main_header)
@@ -88,10 +116,6 @@ class FragmentFilter : Fragment() {
             itemTextTop.text = requireContext().getString(R.string.filter_main_place)
             itemText.text = requireContext().getString(R.string.filter_main_place)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
-            itemIcon.setOnClickListener {
-                (activity as RootActivity).switchNavBarVisibility()
-                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
-            }
         }
 
         binding.includedIndustry.apply {
@@ -99,10 +123,6 @@ class FragmentFilter : Fragment() {
             itemTextTop.text = requireContext().getString(R.string.filter_main_industry)
             itemText.text = requireContext().getString(R.string.filter_main_industry)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
-            itemIcon.setOnClickListener {
-                (activity as RootActivity).switchNavBarVisibility()
-                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
-            }
         }
 
         binding.includedSalary.apply {
@@ -115,19 +135,6 @@ class FragmentFilter : Fragment() {
             itemTextTop.isVisible = false
             itemText.text = requireContext().getString(R.string.filter_main_show_no_salary)
             itemIcon.setImageResource(R.drawable.check_box_off__24px)
-            itemIcon.setOnClickListener {
-                viewModel.onClickShowNoSalary()
-            }
-        }
-
-        binding.includedBtnSet.root.setOnClickListener {
-            viewModel.setFilters()
-            closeFragment()
-        }
-
-        binding.includedBtnSet.root.setOnClickListener {
-            viewModel.clearFilters()
-            closeFragment()
         }
     }
 

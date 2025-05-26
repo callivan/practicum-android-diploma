@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.domain.models.SelectedFilters
 import ru.practicum.android.diploma.presentation.models.ScreenState
 
-class FilterViewModel: ViewModel() {
+class FilterViewModel : ViewModel() {
     private val state = MutableLiveData<ScreenState<SelectedFilters>>()
     fun getState(): LiveData<ScreenState<SelectedFilters>> = state
 
