@@ -7,6 +7,7 @@ import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
 import ru.practicum.android.diploma.domain.models.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.industry.FilterIndustryViewModel
 import ru.practicum.android.diploma.presentation.filter.place.FilterCountryViewModel
 import ru.practicum.android.diploma.presentation.filter.place.FilterRegionViewModel
@@ -36,5 +37,9 @@ val viewModelModule = module {
 
     viewModel<FilterRegionViewModel> {
         FilterRegionViewModel(get<AreasInteractor>())
+    }
+
+    viewModel<FilterViewModel> {
+        FilterViewModel()
     }
 }

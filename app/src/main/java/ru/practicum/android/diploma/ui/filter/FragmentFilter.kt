@@ -8,13 +8,19 @@ import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.domain.models.SelectedFilters
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
+import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.ui.root.RootActivity
 
 class FragmentFilter : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModel<FilterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +38,39 @@ class FragmentFilter : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             closeFragment()
         }
+
+        viewModel.getState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ScreenState.Success -> {
+                    setContent(state.data)
+                }
+                else -> Unit
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun setContent(content: SelectedFilters) {
+        binding.includedPlace.apply {
+            itemTextTop.isVisible = true
+            itemText.text = content.place
+        }
+        binding.includedIndustry.apply {
+            itemTextTop.isVisible = true
+            itemText.text = content.industry
+        }
+        binding.includedSalary.textFieldEdit.setText(content.salary.toString())
+        binding.includedShowNoSalary.itemIcon.apply {
+            if (content.showNoSalary) {
+                setImageResource(R.drawable.check_box_on__24px)
+            } else {
+                setImageResource(R.drawable.check_box_off__24px)
+            }
+        }
     }
 
     private fun fillView() {
@@ -51,14 +85,24 @@ class FragmentFilter : Fragment() {
 
         binding.includedPlace.apply {
             itemTextTop.isVisible = false
+            itemTextTop.text = requireContext().getString(R.string.filter_main_place)
             itemText.text = requireContext().getString(R.string.filter_main_place)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            itemIcon.setOnClickListener {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
+            }
         }
 
         binding.includedIndustry.apply {
             itemTextTop.isVisible = false
+            itemTextTop.text = requireContext().getString(R.string.filter_main_industry)
             itemText.text = requireContext().getString(R.string.filter_main_industry)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            itemIcon.setOnClickListener {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
+            }
         }
 
         binding.includedSalary.apply {
