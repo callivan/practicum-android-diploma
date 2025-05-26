@@ -15,6 +15,7 @@ import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.presentation.favorite.FavoriteVacancyAdapter
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModule
 import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy
 
 class FragmentFavotite : Fragment() {
@@ -54,6 +55,7 @@ class FragmentFavotite : Fragment() {
     private fun setupRecyclerView() {
         adapter = FavoriteVacancyAdapter(emptyList(), object : FavoriteVacancyAdapter.OnVacancyClickListener {
             override fun onClick(vacancy: VacancyDetails) {
+                (activity as RootActivity).switchNavBarVisibility()
                 findNavController().navigate(
                     R.id.action_fragmentFavotite_to_fragmentVacancy,
                     Bundle().apply {
