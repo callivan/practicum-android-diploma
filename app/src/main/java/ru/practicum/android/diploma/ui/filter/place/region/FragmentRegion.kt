@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
-import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.presentation.filter.place.FilterRegionViewModel
 import ru.practicum.android.diploma.presentation.filter.place.RegionAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
@@ -20,7 +19,9 @@ class FragmentRegion : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<FilterRegionViewModel>()
-    private lateinit var adapter: RegionAdapter
+    private var adapter = RegionAdapter { selectedRegion ->
+        // Обработка выбора региона
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,9 +55,6 @@ class FragmentRegion : Fragment() {
 
     private fun setupRecyclerView() {
         binding.regionList.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RegionAdapter { selectedRegion ->
-            // Обработка выбора региона
-        }
         binding.regionList.adapter = adapter
     }
 

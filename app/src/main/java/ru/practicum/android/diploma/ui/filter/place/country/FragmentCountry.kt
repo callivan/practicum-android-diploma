@@ -11,10 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentCountryBinding
-import ru.practicum.android.diploma.presentation.filter.industry.FilterIndustryViewModel
-import ru.practicum.android.diploma.presentation.filter.industry.IndustryAdapter
 import ru.practicum.android.diploma.presentation.filter.place.CountryAdapter
 import ru.practicum.android.diploma.presentation.filter.place.FilterCountryViewModel
 import ru.practicum.android.diploma.presentation.filter.place.FilterPlaceViewModel
@@ -24,7 +21,10 @@ class FragmentCountry : Fragment() {
     private var _binding: FragmentCountryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: CountryAdapter
+    private var adapter = CountryAdapter { selectedCountry ->
+        sharedViewModel.selectedCountry.value = selectedCountry
+        findNavController().popBackStack()
+    }
     private val viewModel by viewModel<FilterCountryViewModel>()
     private val sharedViewModel by activityViewModels<FilterPlaceViewModel>()
 
@@ -62,10 +62,6 @@ class FragmentCountry : Fragment() {
 
     private fun setupRecyclerView() {
         binding.countryList.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CountryAdapter { selectedCountry ->
-            sharedViewModel.selectedCountry.value = selectedCountry
-            findNavController().popBackStack()
-        }
         binding.countryList.adapter = adapter
     }
 

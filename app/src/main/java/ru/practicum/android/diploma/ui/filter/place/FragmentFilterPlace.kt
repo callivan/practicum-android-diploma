@@ -24,7 +24,7 @@ class FragmentFilterPlace : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilterPlaceBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -79,7 +79,7 @@ class FragmentFilterPlace : Fragment() {
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)
         }
-        binding.topBar.btnFirst.setOnClickListener{
+        binding.topBar.btnFirst.setOnClickListener {
             findNavController().popBackStack()
         }
 
