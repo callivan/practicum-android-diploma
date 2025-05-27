@@ -47,6 +47,20 @@ class FragmentFilter : Fragment() {
             closeFragment()
         }
 
+        binding.includedBtnSet.root.setOnClickListener {
+            viewModel.setFilters()
+            closeFragment()
+        }
+
+        binding.includedBtnCancel.root.setOnClickListener {
+            switchButtonsVisibility(false)
+            viewModel.clearFilters()
+        }
+        
+        binding.includedShowNoSalary.itemIcon.setOnClickListener {
+            viewModel.onClickShowNoSalary()
+        }
+
         binding.includedSalary.textFieldEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // none
@@ -151,17 +165,6 @@ class FragmentFilter : Fragment() {
                 (activity as RootActivity).switchNavBarVisibility()
                 findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
             }
-        }
-        binding.includedBtnSet.root.setOnClickListener {
-            viewModel.setFilters()
-            closeFragment()
-        }
-        binding.includedBtnCancel.root.setOnClickListener {
-            switchButtonsVisibility(false)
-            viewModel.clearFilters()
-        }
-        binding.includedShowNoSalary.itemIcon.setOnClickListener {
-            viewModel.onClickShowNoSalary()
         }
         binding.includedSalary.apply {
             textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
