@@ -152,9 +152,6 @@ class FragmentFilter : Fragment() {
                 binding.includedPlace.itemTextTop.text = ""
                 binding.includedPlace.itemText.text = ""
                 binding.includedPlace.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
-            } else {
-                (activity as RootActivity).switchNavBarVisibility()
-                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
             }
         }
         binding.includedIndustry.itemIcon.setOnClickListener {
@@ -162,10 +159,15 @@ class FragmentFilter : Fragment() {
                 binding.includedIndustry.itemTextTop.text = ""
                 binding.includedIndustry.itemText.text = ""
                 binding.includedIndustry.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
-            } else {
-                (activity as RootActivity).switchNavBarVisibility()
-                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
             }
+        }
+        binding.includedPlace.root.setOnClickListener {
+            (activity as RootActivity).switchNavBarVisibility()
+            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
+        }
+        binding.includedIndustry.root.setOnClickListener {
+            (activity as RootActivity).switchNavBarVisibility()
+            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
         }
         binding.includedSalary.apply {
             textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
