@@ -39,9 +39,17 @@ class FragmentFilter : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.includedTopBar.btnFirst.setOnClickListener {
+            closeFragment()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            closeFragment()
+        }
+
         binding.includedSalary.textFieldEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //none
+                // none
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -57,7 +65,7 @@ class FragmentFilter : Fragment() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                //none
+                // none
             }
 
         })
@@ -124,14 +132,6 @@ class FragmentFilter : Fragment() {
     }
 
     private fun setListeners() {
-        binding.includedTopBar.btnFirst.setOnClickListener {
-            closeFragment()
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            closeFragment()
-        }
-
         binding.includedPlace.itemIcon.setOnClickListener {
             if (binding.includedPlace.itemText.text.isNotEmpty()) {
                 binding.includedPlace.itemTextTop.text = ""
@@ -142,7 +142,6 @@ class FragmentFilter : Fragment() {
                 findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
             }
         }
-
         binding.includedIndustry.itemIcon.setOnClickListener {
             if (binding.includedIndustry.itemText.text.isNotEmpty()) {
                 binding.includedIndustry.itemTextTop.text = ""
@@ -153,33 +152,26 @@ class FragmentFilter : Fragment() {
                 findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
             }
         }
-
         binding.includedBtnSet.root.setOnClickListener {
             viewModel.setFilters()
             closeFragment()
         }
-
         binding.includedBtnCancel.root.setOnClickListener {
             switchButtonsVisibility(false)
             viewModel.clearFilters()
         }
-
         binding.includedShowNoSalary.itemIcon.setOnClickListener {
             viewModel.onClickShowNoSalary()
         }
-
         binding.includedSalary.apply {
             textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
                 when (hasFocus) {
-                    true -> {
-                        binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.blue))
-                    }
-                    false -> {
-                        binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.black))
-                    }
+                    true -> binding.includedSalary.textFieldHeader
+                        .setTextColor(requireContext().getColor(R.color.blue))
+                    false -> binding.includedSalary.textFieldHeader
+                        .setTextColor(requireContext().getColor(R.color.black))
                 }
             }
-
             textFieldClear.setOnClickListener {
                 textFieldHeader.text = ""
                 textFieldClear.isVisible = false
