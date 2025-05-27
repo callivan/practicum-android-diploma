@@ -83,11 +83,21 @@ class FragmentFilter : Fragment() {
         switchButtonsVisibility(true)
 
         binding.includedPlace.apply {
+            if (content.place.isNotEmpty()) {
+                itemIcon.setImageResource(R.drawable.close_24px)
+            } else {
+                itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            }
             itemText.text = content.place
             itemTextTop.isVisible = content.place.isNotEmpty()
         }
 
         binding.includedIndustry.apply {
+            if (content.industry.isNotEmpty()) {
+                itemIcon.setImageResource(R.drawable.close_24px)
+            } else {
+                itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            }
             itemText.text = content.industry
             itemTextTop.isVisible = content.industry.isNotEmpty()
         }
@@ -103,7 +113,6 @@ class FragmentFilter : Fragment() {
                 textFieldEdit.setText(content.salary.toString())
             }
         }
-
 
         binding.includedShowNoSalary.itemIcon.apply {
             if (content.showNoSalary) {
@@ -124,13 +133,25 @@ class FragmentFilter : Fragment() {
         }
 
         binding.includedPlace.itemIcon.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
-            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
+            if (binding.includedPlace.itemText.text.isNotEmpty()) {
+                binding.includedPlace.itemTextTop.text = ""
+                binding.includedPlace.itemText.text = ""
+                binding.includedPlace.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            } else {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
+            }
         }
 
         binding.includedIndustry.itemIcon.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
-            findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
+            if (binding.includedIndustry.itemText.text.isNotEmpty()) {
+                binding.includedIndustry.itemTextTop.text = ""
+                binding.includedIndustry.itemText.text = ""
+                binding.includedIndustry.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            } else {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
+            }
         }
 
         binding.includedBtnSet.root.setOnClickListener {
@@ -147,14 +168,22 @@ class FragmentFilter : Fragment() {
             viewModel.onClickShowNoSalary()
         }
 
-        binding.includedSalary.textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
-            when (hasFocus) {
-                true -> {
-                    binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.blue))
+        binding.includedSalary.apply {
+            textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
+                when (hasFocus) {
+                    true -> {
+                        binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.blue))
+                    }
+                    false -> {
+                        binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.black))
+                    }
                 }
-                false -> {
-                    binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.black))
-                }
+            }
+
+            textFieldClear.setOnClickListener {
+                textFieldHeader.text = ""
+                textFieldClear.isVisible = false
+                textFieldEdit.setText("")
             }
         }
     }
