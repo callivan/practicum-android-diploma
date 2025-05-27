@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.presentation.filter.place
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,6 +62,7 @@ class FilterRegionViewModel(private val areasInteractor: AreasInteractor) : View
                 when (state) {
                     is ResponseStatus.Success -> {
                         if (state.data.areas.isNotEmpty()) {
+                            Log.d("FilterRegionViewModel", "Regions loaded: ${state.data.areas.size}")
                             screenState.postValue(ScreenState.Success(state.data))
 
                             regions.addAll(state.data.areas)

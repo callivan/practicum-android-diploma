@@ -98,4 +98,12 @@
         <item name="android:lineHeight">@dimen/line_height_s</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="filterPlaceText">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_s</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:lineHeight">@dimen/line_height_s</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
 </resources>
