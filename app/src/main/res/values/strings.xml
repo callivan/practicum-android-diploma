@@ -33,4 +33,11 @@
     <string name="vacancy_header_conditions">Условия</string>
     <string name="vacancy_header_skills">Ключевые навыки</string>
 
+    <string name="filter_main_header">Настройки фильтрации</string>
+    <string name="filter_main_place">Место работы</string>
+    <string name="filter_main_industry">Отрасль</string>
+    <string name="filter_main_salary">Ожидаемая зарплата</string>
+    <string name="filter_main_salary_hint">Введите сумму</string>
+    <string name="filter_main_show_no_salary">Не показывать без зарплаты</string>
+
 </resources>

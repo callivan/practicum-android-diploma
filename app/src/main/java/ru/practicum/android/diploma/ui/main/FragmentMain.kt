@@ -22,6 +22,7 @@ import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.main.MainViewModel
 import ru.practicum.android.diploma.presentation.main.VacancyAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.vacancy.FragmentVacancy
 
 class FragmentMain : Fragment() {
@@ -53,12 +54,19 @@ class FragmentMain : Fragment() {
         binding.topBarItem.header.text = getString(R.string.vacancies_search)
         binding.topBarItem.btnFirst.isVisible = false
         binding.topBarItem.btnSecond.isVisible = false
-        binding.topBarItem.btnThird.setImageResource(R.drawable.filter_off__24px)
+        binding.topBarItem.btnThird.apply {
+            setImageResource(R.drawable.filter_off__24px)
+            setOnClickListener {
+                (activity as RootActivity).switchNavBarVisibility()
+                findNavController().navigate(R.id.action_fragmentMain_to_fragmentFilter)
+            }
+        }
     }
 
     private fun setupRecyclerView() {
         vacancyAdapter = VacancyAdapter(emptyList(), object : VacancyAdapter.OnVacancyClickListener {
             override fun onClick(vacancy: VacancyShort) {
+                (activity as RootActivity).switchNavBarVisibility()
                 findNavController().navigate(
                     R.id.action_fragmentMain_to_fragmentVacancy,
                     Bundle().apply {
