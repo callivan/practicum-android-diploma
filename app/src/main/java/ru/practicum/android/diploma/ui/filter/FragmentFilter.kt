@@ -1,11 +1,14 @@
 package ru.practicum.android.diploma.ui.filter
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,10 +39,35 @@ class FragmentFilter : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.includedSalary.textFieldEdit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //none
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                when (p0.toString().isNotEmpty()) {
+                    true -> {
+                        binding.includedSalary.textFieldHeader.text =
+                            requireContext().getString(R.string.filter_main_salary)
+                    }
+                    false -> {
+                        binding.includedSalary.textFieldHeader.text = ""
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                //none
+            }
+
+        })
+
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Success -> {
                     setContent(state.data)
+                    binding.includedBtnSet.root.isVisible = true
+                    binding.includedBtnCancel.root.isVisible = true
                 }
                 else -> Unit
             }
@@ -52,15 +80,31 @@ class FragmentFilter : Fragment() {
     }
 
     private fun setContent(content: SelectedFilters) {
+        switchButtonsVisibility(true)
+
         binding.includedPlace.apply {
-            itemTextTop.isVisible = true
             itemText.text = content.place
+            itemTextTop.isVisible = content.place.isNotEmpty()
         }
+
         binding.includedIndustry.apply {
-            itemTextTop.isVisible = true
             itemText.text = content.industry
+            itemTextTop.isVisible = content.industry.isNotEmpty()
         }
-        binding.includedSalary.textFieldEdit.setText(content.salary.toString())
+
+        binding.includedSalary.apply {
+            if (content.salary == null) {
+                textFieldHeader.text = ""
+                textFieldClear.isVisible = false
+                textFieldEdit.setText("")
+            } else {
+                textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+                textFieldClear.isVisible = true
+                textFieldEdit.setText(content.salary.toString())
+            }
+        }
+
+
         binding.includedShowNoSalary.itemIcon.apply {
             if (content.showNoSalary) {
                 setImageResource(R.drawable.check_box_on__24px)
@@ -94,13 +138,24 @@ class FragmentFilter : Fragment() {
             closeFragment()
         }
 
-        binding.includedBtnSet.root.setOnClickListener {
+        binding.includedBtnCancel.root.setOnClickListener {
+            switchButtonsVisibility(false)
             viewModel.clearFilters()
-            closeFragment()
         }
 
         binding.includedShowNoSalary.itemIcon.setOnClickListener {
             viewModel.onClickShowNoSalary()
+        }
+
+        binding.includedSalary.textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
+            when (hasFocus) {
+                true -> {
+                    binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.blue))
+                }
+                false -> {
+                    binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.black))
+                }
+            }
         }
     }
 
@@ -114,20 +169,20 @@ class FragmentFilter : Fragment() {
         binding.includedPlace.apply {
             itemTextTop.isVisible = false
             itemTextTop.text = requireContext().getString(R.string.filter_main_place)
-            itemText.text = requireContext().getString(R.string.filter_main_place)
+            itemText.hint = requireContext().getString(R.string.filter_main_place)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
         }
 
         binding.includedIndustry.apply {
             itemTextTop.isVisible = false
             itemTextTop.text = requireContext().getString(R.string.filter_main_industry)
-            itemText.text = requireContext().getString(R.string.filter_main_industry)
+            itemText.hint = requireContext().getString(R.string.filter_main_industry)
             itemIcon.setImageResource(R.drawable.arrow_forward_24px)
         }
 
         binding.includedSalary.apply {
             textFieldClear.isVisible = false
-            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+            textFieldHeader.hint = requireContext().getString(R.string.filter_main_salary)
             textFieldEdit.hint = requireContext().getString(R.string.filter_main_salary_hint)
         }
 
@@ -141,5 +196,10 @@ class FragmentFilter : Fragment() {
     private fun closeFragment() {
         (activity as RootActivity).switchNavBarVisibility()
         findNavController().popBackStack()
+    }
+
+    private fun switchButtonsVisibility(visible: Boolean) {
+        binding.includedBtnSet.root.isVisible = visible
+        binding.includedBtnCancel.root.isVisible = visible
     }
 }

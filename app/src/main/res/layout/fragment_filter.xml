@@ -69,6 +69,7 @@
         layout="@layout/button_blue"
         android:layout_marginHorizontal="@dimen/margin16"
         android:layout_marginVertical="@dimen/margin8"
+        android:visibility="gone"
 
         app:layout_constraintBottom_toTopOf="@id/included_btn_cancel"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +82,7 @@
         layout="@layout/button_transparent"
         android:layout_marginHorizontal="@dimen/margin16"
         android:layout_marginBottom="24dp"
+        android:visibility="gone"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

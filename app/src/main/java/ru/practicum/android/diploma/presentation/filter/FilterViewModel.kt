@@ -7,10 +7,15 @@ import ru.practicum.android.diploma.domain.models.SelectedFilters
 import ru.practicum.android.diploma.presentation.models.ScreenState
 
 class FilterViewModel : ViewModel() {
+
+    companion object {
+        val EMPTY_FILTER = SelectedFilters("", "", null, false)
+    }
+
     private val state = MutableLiveData<ScreenState<SelectedFilters>>()
     fun getState(): LiveData<ScreenState<SelectedFilters>> = state
 
-    var currentFilters = SelectedFilters("place", "industry", 12345, false)
+    var currentFilters = SelectedFilters("place", "", 12345, false)
 
     init {
         state.postValue(ScreenState.Success(currentFilters))
@@ -27,7 +32,8 @@ class FilterViewModel : ViewModel() {
     }
 
     fun clearFilters() {
-        // сбрасываем фильтры
+        currentFilters = EMPTY_FILTER
+        state.postValue(ScreenState.Success(currentFilters))
     }
 
     fun setFilters() {
