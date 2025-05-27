@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.ui.filter
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -56,7 +57,7 @@ class FragmentFilter : Fragment() {
             switchButtonsVisibility(false)
             viewModel.clearFilters()
         }
-        
+
         binding.includedShowNoSalary.itemIcon.setOnClickListener {
             viewModel.onClickShowNoSalary()
         }
@@ -208,6 +209,7 @@ class FragmentFilter : Fragment() {
             textFieldClear.isVisible = false
             textFieldHeader.hint = requireContext().getString(R.string.filter_main_salary)
             textFieldEdit.hint = requireContext().getString(R.string.filter_main_salary_hint)
+            textFieldEdit.inputType = InputType.TYPE_CLASS_NUMBER
         }
 
         binding.includedShowNoSalary.apply {

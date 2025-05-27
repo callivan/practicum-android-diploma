@@ -10,12 +10,13 @@ class FilterViewModel : ViewModel() {
 
     companion object {
         val EMPTY_FILTER = SelectedFilters("", "", null, false)
+        val TEST_FILTER = SelectedFilters("place", "", 12345, false)
     }
 
     private val state = MutableLiveData<ScreenState<SelectedFilters>>()
     fun getState(): LiveData<ScreenState<SelectedFilters>> = state
 
-    var currentFilters = SelectedFilters("place", "", 12345, false)
+    var currentFilters = TEST_FILTER
 
     init {
         state.postValue(ScreenState.Success(currentFilters))
