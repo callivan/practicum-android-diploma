@@ -8,17 +8,19 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.R.color.gray
 import ru.practicum.android.diploma.databinding.FragmentFilterPlaceBinding
-import ru.practicum.android.diploma.presentation.filter.place.FilterPlaceViewModel
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
+import kotlin.getValue
 
 class FragmentFilterPlace : Fragment() {
     private var _binding: FragmentFilterPlaceBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel by activityViewModels<FilterPlaceViewModel>()
+
+    private val viewModel by viewModel<FilterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,23 +36,19 @@ class FragmentFilterPlace : Fragment() {
 
         setupView()
         navFun()
+        setCountryContent()
+        setRegionContent()
 
-        sharedViewModel.selectedCountry.observe(viewLifecycleOwner) { country ->
-            if (country != null) {
-                binding.country.itemTextTop.isVisible = true
-                binding.country.itemIcon.setImageResource(R.drawable.close_24px)
-                binding.country.itemTextTop.text = "Страна"
-                binding.country.itemText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                binding.country.itemText.text = country.name
+        binding.country.itemIcon.setOnClickListener {
+            viewModel.setArea(mutableListOf())
+            setCountryContent()
+        }
 
-                binding.country.itemIcon.setOnClickListener {
-                    sharedViewModel.selectedCountry.value = null
-                }
-            } else {
-                setupView()
+        val country = viewModel.getFilters()?.area?.get(0)
 
-                binding.country.itemIcon.setOnClickListener(null)
-            }
+        binding.country.itemIcon.setOnClickListener {
+            viewModel.setArea(if (country != null) mutableListOf(country) else mutableListOf())
+            setRegionContent()
         }
     }
 
@@ -72,9 +70,46 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
     }
 
+    private fun setCountryContent() {
+        val filters = viewModel.getFilters()
+        val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
+
+        if (country == null) {
+            return
+        }
+
+        binding.country.itemTextTop.isVisible = true
+        binding.country.itemIcon.setImageResource(R.drawable.close_24px)
+        binding.country.itemTextTop.text = "Страна"
+        binding.country.itemText.text = country.name
+    }
+
+    private fun setRegionContent() {
+        val filters = viewModel.getFilters()
+        val region = filters?.area?.size?.let { if (it > 1) filters.area[1] else null }
+
+        if (region == null) {
+            return
+        }
+
+        binding.region.itemTextTop.isVisible = true
+        binding.region.itemIcon.setImageResource(R.drawable.close_24px)
+        binding.region.itemTextTop.text = "Регион"
+        binding.region.itemText.text = region.name
+    }
+
     private fun navFun() {
         binding.regionLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentRegion)
+            val selectedCountry = viewModel.getFilters()?.area?.get(0)
+
+            if (selectedCountry != null) {
+                findNavController().navigate(
+                    R.id.action_fragmentFilterPlace_to_fragmentRegion,
+                    Bundle().apply {
+                        putString(COUNTRY_ID, selectedCountry.id)
+                    }
+                )
+            }
         }
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)
@@ -90,4 +125,7 @@ class FragmentFilterPlace : Fragment() {
         _binding = null
     }
 
+    companion object {
+        const val COUNTRY_ID = "COUNTRY_ID"
+    }
 }

@@ -10,17 +10,33 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
-import ru.practicum.android.diploma.presentation.filter.place.FilterRegionViewModel
+import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.RegionAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
+import ru.practicum.android.diploma.ui.filter.place.FragmentFilterPlace
 
 class FragmentRegion : Fragment() {
     private var _binding: FragmentRegionBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<FilterRegionViewModel>()
+    private val viewModel by viewModel<FilterViewModel>()
     private var adapter = RegionAdapter { selectedRegion ->
-        // Обработка выбора региона
+        val area = viewModel.getFilters()?.area
+        val updatedArea = mutableListOf<Area>()
+
+        if (area != null) {
+            updatedArea.addAll(area)
+        }
+
+        if (updatedArea.size > 1) {
+            updatedArea.removeLastOrNull()
+        }
+
+        updatedArea.add(selectedRegion)
+
+        viewModel.setArea(updatedArea)
+        findNavController().popBackStack()
     }
 
     override fun onCreateView(
@@ -41,7 +57,7 @@ class FragmentRegion : Fragment() {
         setupSearch()
         navFun()
 
-        val countryId = arguments?.getString("countryId") ?: return
+        val countryId = arguments?.getString(FragmentFilterPlace.COUNTRY_ID) ?: return
         viewModel.getCountryRegions(countryId)
     }
 
@@ -59,17 +75,21 @@ class FragmentRegion : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
+        viewModel.getRegionsScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Loading -> {
-                    // Показать лоадер, если необходимо
+                    binding.loaderWrapper.searchProgressBar.isVisible = true
                 }
+
                 is ScreenState.Success -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
                     adapter.updateList(state.data.areas)
                 }
+
                 is ScreenState.Empty -> {
                     adapter.updateList(emptyList())
                 }
+
                 else -> {
                     // Обработка ошибок или Init
                 }
@@ -78,7 +98,7 @@ class FragmentRegion : Fragment() {
     }
 
     private fun setupSearch() {
-        binding.editText.editTextSearch.addTextChangedListener(viewModel.getTextWatcher())
+        binding.editText.editTextSearch.addTextChangedListener(viewModel.getRegionsTextWatcher())
     }
 
     private fun navFun() {

@@ -1,20 +1,17 @@
 package ru.practicum.android.diploma.ui.filter.place.country
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentCountryBinding
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.CountryAdapter
-import ru.practicum.android.diploma.presentation.filter.place.FilterCountryViewModel
-import ru.practicum.android.diploma.presentation.filter.place.FilterPlaceViewModel
 import ru.practicum.android.diploma.presentation.models.ScreenState
 
 class FragmentCountry : Fragment() {
@@ -22,11 +19,10 @@ class FragmentCountry : Fragment() {
     private val binding get() = _binding!!
 
     private var adapter = CountryAdapter { selectedCountry ->
-        sharedViewModel.selectedCountry.value = selectedCountry
+        viewModel.setArea(mutableListOf(selectedCountry))
         findNavController().popBackStack()
     }
-    private val viewModel by viewModel<FilterCountryViewModel>()
-    private val sharedViewModel by activityViewModels<FilterPlaceViewModel>()
+    private val viewModel by viewModel<FilterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,19 +62,21 @@ class FragmentCountry : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
+        viewModel.getCountriesScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Success -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
                     adapter.updateList(state.data)
-                    Log.d("FragmentCountry", "Loaded countries: ${state.data.size}")
                 }
+
                 is ScreenState.Empty -> {
-                    Log.d("FragmentCountry", "Country list is empty")
                     // Обработка пустого состояния
                 }
+
                 is ScreenState.Loading -> {
-                    // Показ лоадера
+                    binding.loaderWrapper.searchProgressBar.isVisible = true
                 }
+
                 else -> {}
             }
         }

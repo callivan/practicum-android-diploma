@@ -55,7 +55,9 @@ class FragmentMain : Fragment() {
         binding.topBarItem.btnFirst.isVisible = false
         binding.topBarItem.btnSecond.isVisible = false
         binding.topBarItem.btnThird.apply {
-            setImageResource(R.drawable.filter_off__24px)
+            setImageResource(
+                if (viewModel.isFiltersSelected()) R.drawable.filter_on__24px else R.drawable.filter_off__24px
+            )
             setOnClickListener {
                 (activity as RootActivity).switchNavBarVisibility()
                 findNavController().navigate(R.id.action_fragmentMain_to_fragmentFilter)
