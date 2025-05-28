@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,7 +17,6 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity
-import kotlin.text.isNotEmpty
 
 class FragmentFilter : Fragment() {
     private var _binding: FragmentFilterBinding? = null
@@ -162,8 +160,10 @@ class FragmentFilter : Fragment() {
             }
         }
 
+        val isChecked = filters != null && filters.onlyWithSalary
+
         binding.includedShowNoSalary.itemIcon.setImageResource(
-            if (filters != null && filters.onlyWithSalary) R.drawable.check_box_on__24px else R.drawable.check_box_off__24px
+            if (isChecked) R.drawable.check_box_on__24px else R.drawable.check_box_off__24px
         )
     }
 

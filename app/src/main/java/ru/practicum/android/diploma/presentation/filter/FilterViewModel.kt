@@ -66,24 +66,26 @@ class FilterViewModel(
             filters = VacanciesFilters()
         }
 
-        filters?.industry = if (data != null) mutableListOf(data) else null
+        filters = filters?.copy(industry = if (data != null) mutableListOf(data) else null)
     }
 
     fun setArea(data: MutableList<Area>? = null) {
+        println(data)
         if (filters == null) {
             filters = VacanciesFilters(area = data)
         } else {
-            filters?.area = data
+            filters = filters?.copy(area = data)
         }
     }
 
     fun setSalary(data: String?) {
-        println(data)
+        val isEmpty = data != null && data.isEmpty()
+        val isNotEmpty = data != null && data.isNotEmpty()
+
         if (filters == null) {
             filters = VacanciesFilters(salary = data?.toInt())
         } else {
-            filters?.salary =
-                if (data != null && data.isEmpty()) null else if (data != null && data.isNotEmpty()) data.toInt() else null
+            filters = filters?.copy(salary = if (isEmpty) null else if (isNotEmpty) data.toInt() else null)
         }
     }
 
@@ -91,7 +93,7 @@ class FilterViewModel(
         if (filters == null) {
             filters = VacanciesFilters(onlyWithSalary = true)
         } else {
-            filters?.onlyWithSalary?.let { filters?.onlyWithSalary = !it }
+            filters = filters?.copy(onlyWithSalary = !filters?.onlyWithSalary!!)
         }
     }
 

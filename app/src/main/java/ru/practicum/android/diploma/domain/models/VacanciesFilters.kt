@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.domain.models
 
 data class VacanciesFilters(
-    var area: MutableList<Area>? = null,
-    var salary: Int? = null,
-    var onlyWithSalary: Boolean = false,
-    var industry: List<Industry>? = null
+    val area: MutableList<Area>? = null,
+    val salary: Int? = null,
+    val onlyWithSalary: Boolean = false,
+    val industry: List<Industry>? = null
 )

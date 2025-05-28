@@ -72,7 +72,7 @@ class FragmentFilterPlace : Fragment() {
 
     private fun setCountryContent() {
         val filters = viewModel.getFilters()
-        val country = if (filters?.area?.isNotEmpty() == true) filters.area?.get(0) else null
+        val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
 
         if (country == null) {
             return
@@ -86,7 +86,7 @@ class FragmentFilterPlace : Fragment() {
 
     private fun setRegionContent() {
         val filters = viewModel.getFilters()
-        val region = filters?.area?.size?.let { if (it > 1) filters.area?.get(1) else null }
+        val region = filters?.area?.size?.let { if (it > 1) filters.area[1] else null }
 
         if (region == null) {
             return

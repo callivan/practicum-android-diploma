@@ -94,6 +94,16 @@ class MainViewModel(
         return state
     }
 
+    fun isFiltersSelected(): Boolean {
+        val filters = vacanciesFiltersInteractor.get()
+        val isFilters = filters != null
+        val isSalary = filters?.salary != null
+        val isArea = filters?.area != null
+        val isIndustry = filters?.industry != null
+
+        return isFilters && (isArea || isSalary || filters.onlyWithSalary || isIndustry)
+    }
+
     fun loadMore(page: Int?) {
         getVacancies(VacanciesRequest(text = vacancy ?: "", page = page))
     }
