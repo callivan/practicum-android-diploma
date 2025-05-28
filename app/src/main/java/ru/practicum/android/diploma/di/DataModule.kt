@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.SharedPrefs
 import ru.practicum.android.diploma.data.converters.AreaChildResponseDbConverter
 import ru.practicum.android.diploma.data.converters.AreaDbConverter
 import ru.practicum.android.diploma.data.converters.IndustryDbConverter
@@ -19,8 +20,10 @@ import ru.practicum.android.diploma.data.deserializers.AreaChildResponseDeserial
 import ru.practicum.android.diploma.data.deserializers.VacanciesResponseDeserializer
 import ru.practicum.android.diploma.data.deserializers.VacancyResponseDeserializer
 import ru.practicum.android.diploma.data.dto.AreaChildResponseDto
+import ru.practicum.android.diploma.data.dto.VacanciesFiltersDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponseDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.data.filters.VacanciesFilters
 import ru.practicum.android.diploma.data.interceptors.AuthInterceptor
 import ru.practicum.android.diploma.data.interceptors.InternetAvailableInterceptor
 import ru.practicum.android.diploma.data.network.HeadHunterApiServices
@@ -70,5 +73,9 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(get<HeadHunterApiServices>())
+    }
+
+    factory<SharedPrefs<VacanciesFiltersDto>> {
+        VacanciesFilters(androidContext())
     }
 }

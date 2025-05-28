@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.ResponseStatus
+import ru.practicum.android.diploma.domain.models.VacanciesFiltersInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.VacanciesResponse
@@ -16,10 +17,14 @@ import ru.practicum.android.diploma.domain.models.VacancyShort
 import ru.practicum.android.diploma.presentation.mappers.toScreenState
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.util.debounce
+import kotlin.String
 
 private const val INPUT_DELAY = 2000L
 
-class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
+class MainViewModel(
+    private val vacanciesInteractor: VacanciesInteractor,
+    private val vacanciesFiltersInteractor: VacanciesFiltersInteractor
+) : ViewModel() {
     private var pages: Int? = null
     private var vacancy: String? = null
 
@@ -94,7 +99,18 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
     }
 
     private fun getVacancies(req: VacanciesRequest) {
-        if (req.text.isEmpty()) {
+        val filters = vacanciesFiltersInteractor.get()
+
+        val request = VacanciesRequest(
+            text = req.text,
+            page = req.page,
+            area = filters?.area?.map { it.id },
+            salary = filters?.salary,
+            onlyWithSalary = filters?.onlyWithSalary == true,
+            industry = filters?.industry?.map { it.id }
+        )
+
+        if (request.text.isEmpty()) {
             screenState.postValue(ScreenState.Init)
             return
         }
@@ -104,7 +120,7 @@ class MainViewModel(private val vacanciesInteractor: VacanciesInteractor) : View
         screenState.postValue(ScreenState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
-            vacanciesInteractor.getVacancies(req).collect { state ->
+            vacanciesInteractor.getVacancies(request).collect { state ->
                 when (state) {
                     is ResponseStatus.Success -> {
                         if (state.data.items.isNotEmpty()) {

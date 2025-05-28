@@ -12,6 +12,8 @@ class InternetAvailableInterceptor(private val context: Context) : Interceptor {
             throw IOException("No internet connection")
         }
 
+        println(chain.request().url())
+
         return chain.proceed(chain.request())
     }
 }

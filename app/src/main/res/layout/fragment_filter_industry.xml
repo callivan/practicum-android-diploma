@@ -21,41 +21,43 @@
 
     <LinearLayout
         android:id="@+id/loader"
-        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLayout"
 
-        android:gravity="center">
-        <include layout="@layout/loader"/>
+        app:layout_constraintTop_toBottomOf="@+id/editTextLayout">
+
+        <include layout="@layout/loader" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/placeholder_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:gravity="center"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLayout"
-        android:gravity="center">
+        app:layout_constraintTop_toBottomOf="@id/editTextLayout">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/err_load_list"/>
+            android:src="@drawable/err_load_list" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/err_load_list"
-            android:textAppearance="@style/text_font_l"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textAppearance="@style/text_font_l" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,14 +65,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:layout_marginStart="@dimen/margin16"
+        android:layout_marginTop="@dimen/margin8"
+        android:layout_marginEnd="@dimen/margin16"
+
+        android:layout_marginBottom="@dimen/margin8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBarLayout"
-
-        android:layout_marginStart="@dimen/margin16"
-        android:layout_marginEnd="@dimen/margin16"
-        android:layout_marginTop="@dimen/margin8"
-        android:layout_marginBottom="@dimen/margin8">
+        app:layout_constraintTop_toBottomOf="@id/topBarLayout">
 
         <include
             android:id="@+id/editText"
@@ -84,7 +86,22 @@
         android:layout_marginTop="@dimen/margin16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLayout" />
+        app:layout_constraintTop_toBottomOf="@id/editTextLayout"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextLayout">
+
+        <include
+            android:id="@+id/loaderWrapper"
+            layout="@layout/loader" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

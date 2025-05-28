@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.filter
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -15,16 +16,20 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
-import ru.practicum.android.diploma.domain.models.SelectedFilters
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
-import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.ui.root.RootActivity
+import kotlin.text.isNotEmpty
 
 class FragmentFilter : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<FilterViewModel>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel.filtersConcatenation()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +45,11 @@ class FragmentFilter : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setPlaceContent()
+        setIndustryContent()
+        setSalaryContent()
+        switchButtonsVisibility()
+
         binding.includedTopBar.btnFirst.setOnClickListener {
             closeFragment()
         }
@@ -49,17 +59,21 @@ class FragmentFilter : Fragment() {
         }
 
         binding.includedBtnSet.root.setOnClickListener {
-            viewModel.setFilters()
+            viewModel.addFilters()
             closeFragment()
         }
 
         binding.includedBtnCancel.root.setOnClickListener {
-            switchButtonsVisibility(false)
-            viewModel.clearFilters()
+            viewModel.cleanFilters()
+            setPlaceContent()
+            setIndustryContent()
+            setSalaryContent()
+            switchButtonsVisibility()
         }
 
         binding.includedShowNoSalary.itemIcon.setOnClickListener {
-            viewModel.onClickShowNoSalary()
+            viewModel.setOnlyWithSalary()
+            setSalaryContent()
         }
 
         binding.includedSalary.textFieldEdit.addTextChangedListener(object : TextWatcher {
@@ -73,10 +87,14 @@ class FragmentFilter : Fragment() {
                         binding.includedSalary.textFieldHeader.text =
                             requireContext().getString(R.string.filter_main_salary)
                     }
+
                     false -> {
                         binding.includedSalary.textFieldHeader.text = ""
                     }
                 }
+
+                viewModel.setSalary(p0.toString())
+                switchButtonsVisibility()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -84,17 +102,6 @@ class FragmentFilter : Fragment() {
             }
 
         })
-
-        viewModel.getState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is ScreenState.Success -> {
-                    setContent(state.data)
-                    binding.includedBtnSet.root.isVisible = true
-                    binding.includedBtnCancel.root.isVisible = true
-                }
-                else -> Unit
-            }
-        }
     }
 
     override fun onDestroy() {
@@ -102,48 +109,62 @@ class FragmentFilter : Fragment() {
         _binding = null
     }
 
-    private fun setContent(content: SelectedFilters) {
-        switchButtonsVisibility(true)
+    private fun setPlaceContent() {
+        switchButtonsVisibility()
+        val placeList = viewModel.getFilters()?.area
+        val place = placeList?.joinToString(", ") { it.name }
+        val isPlaceVisible = place != null && placeList.isNotEmpty()
 
         binding.includedPlace.apply {
-            if (content.place.isNotEmpty()) {
-                itemIcon.setImageResource(R.drawable.close_24px)
-            } else {
-                itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            itemTextTop.isVisible = isPlaceVisible
+            itemText.text = if (isPlaceVisible) place else getString(R.string.filter_main_place)
+            itemIcon.setImageResource(if (isPlaceVisible) R.drawable.close_24px else R.drawable.arrow_forward_24px)
+            itemIcon.setOnClickListener {
+                viewModel.setArea(null)
+                setPlaceContent()
             }
-            itemText.text = content.place
-            itemTextTop.isVisible = content.place.isNotEmpty()
         }
+    }
+
+    private fun setIndustryContent() {
+        switchButtonsVisibility()
+        val industries = viewModel.getFilters()?.industry
+        val industry = industries?.joinToString(", ") { it.name }
+        val isIndustryVisible = industry != null && industries.isNotEmpty()
 
         binding.includedIndustry.apply {
-            if (content.industry.isNotEmpty()) {
-                itemIcon.setImageResource(R.drawable.close_24px)
-            } else {
-                itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+            itemTextTop.isVisible = isIndustryVisible
+            itemText.text = if (isIndustryVisible) industry else getString(R.string.filter_main_industry)
+            itemIcon.setImageResource(if (isIndustryVisible) R.drawable.close_24px else R.drawable.arrow_forward_24px)
+            itemIcon.setOnClickListener {
+                viewModel.setIndustry(null)
+                setIndustryContent()
             }
-            itemText.text = content.industry
-            itemTextTop.isVisible = content.industry.isNotEmpty()
         }
+    }
+
+    private fun setSalaryContent() {
+        switchButtonsVisibility()
+        val filters = viewModel.getFilters()
 
         binding.includedSalary.apply {
-            if (content.salary == null) {
-                textFieldHeader.text = ""
-                textFieldClear.isVisible = false
-                textFieldEdit.setText("")
-            } else {
-                textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+
+            if (filters?.salary != null && filters.salary != 0) {
                 textFieldClear.isVisible = true
-                textFieldEdit.setText(content.salary.toString())
+                textFieldEdit.setText(filters.salary.toString())
+            } else {
+                textFieldClear.isVisible = false
+            }
+
+            textFieldClear.setOnClickListener {
+                viewModel.setSalary(null)
             }
         }
 
-        binding.includedShowNoSalary.itemIcon.apply {
-            if (content.showNoSalary) {
-                setImageResource(R.drawable.check_box_on__24px)
-            } else {
-                setImageResource(R.drawable.check_box_off__24px)
-            }
-        }
+        binding.includedShowNoSalary.itemIcon.setImageResource(
+            if (filters != null && filters.onlyWithSalary) R.drawable.check_box_on__24px else R.drawable.check_box_off__24px
+        )
     }
 
     private fun setListeners() {
@@ -172,10 +193,11 @@ class FragmentFilter : Fragment() {
         binding.includedSalary.apply {
             textFieldEdit.setOnFocusChangeListener { _, hasFocus ->
                 when (hasFocus) {
-                    true -> binding.includedSalary.textFieldHeader
-                        .setTextColor(requireContext().getColor(R.color.blue))
-                    false -> binding.includedSalary.textFieldHeader
-                        .setTextColor(requireContext().getColor(R.color.black))
+                    true -> binding.includedSalary.textFieldHeader.setTextColor(requireContext().getColor(R.color.blue))
+
+                    false -> binding.includedSalary.textFieldHeader.setTextColor(
+                        requireContext().getColor(R.color.black)
+                    )
                 }
             }
             textFieldClear.setOnClickListener {
@@ -226,8 +248,10 @@ class FragmentFilter : Fragment() {
         findNavController().popBackStack()
     }
 
-    private fun switchButtonsVisibility(visible: Boolean) {
-        binding.includedBtnSet.root.isVisible = visible
-        binding.includedBtnCancel.root.isVisible = visible
+    private fun switchButtonsVisibility() {
+        val isVisible = viewModel.filterChanged()
+
+        binding.includedBtnSet.root.isVisible = isVisible
+        binding.includedBtnCancel.root.isVisible = isVisible
     }
 }

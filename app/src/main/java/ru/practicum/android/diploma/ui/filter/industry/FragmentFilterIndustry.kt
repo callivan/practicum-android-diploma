@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
-import ru.practicum.android.diploma.presentation.filter.industry.FilterIndustryViewModel
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryAdapter
 import ru.practicum.android.diploma.presentation.models.ScreenState
 
@@ -21,15 +21,13 @@ class FragmentFilterIndustry : Fragment() {
     private var _binding: FragmentFilterIndustryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<FilterIndustryViewModel>()
+    private val viewModel by viewModel<FilterViewModel>()
 
     private val industryAdapter by lazy {
-        IndustryAdapter { selectedIndustry ->
-            if (selectedIndustry != null) {
-                // Выбрана отрасль
-            } else {
-                // Выбор снят
-            }
+        val prevSelectedIndustry = viewModel.getFilters()?.industry?.get(0)
+
+        IndustryAdapter(prevSelectedIndustry = prevSelectedIndustry) { selectedIndustry ->
+            viewModel.setIndustry(selectedIndustry)
         }
     }
 
@@ -84,7 +82,7 @@ class FragmentFilterIndustry : Fragment() {
 
     private fun setupSearch() {
         binding.editText.editTextSearch.apply {
-            addTextChangedListener(viewModel.getTextWatcher())
+            addTextChangedListener(viewModel.getIndustriesTextWatcher())
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     binding.editText.clearIcon.isVisible = !s.isNullOrEmpty()
@@ -102,21 +100,24 @@ class FragmentFilterIndustry : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
+        viewModel.getIndustriesScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Loading -> {
-                    // Empty
+                    binding.loaderWrapper.searchProgressBar.isVisible = true
                 }
 
                 is ScreenState.Success -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
                     industryAdapter.submitList(state.data)
                 }
 
                 is ScreenState.Empty -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
                     // Empty
                 }
 
                 else -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
                     // Empty
                 }
             }
