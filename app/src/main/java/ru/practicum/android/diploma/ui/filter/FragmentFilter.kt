@@ -153,13 +153,13 @@ class FragmentFilter : Fragment() {
         val filters = viewModel.getFilters()
 
         binding.includedSalary.apply {
-            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
 
             if (filters?.salary != null && filters.salary != 0) {
                 textFieldClear.isVisible = true
                 textFieldEdit.setText(filters.salary.toString())
             } else {
                 textFieldClear.isVisible = false
+                textFieldEdit.setText("")
             }
 
             textFieldClear.setOnClickListener {
