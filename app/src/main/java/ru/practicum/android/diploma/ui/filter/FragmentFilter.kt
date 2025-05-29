@@ -183,11 +183,9 @@ class FragmentFilter : Fragment() {
             }
         }
         binding.includedPlace.root.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
             findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
         }
         binding.includedIndustry.root.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
             findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
         }
         binding.includedSalary.apply {
