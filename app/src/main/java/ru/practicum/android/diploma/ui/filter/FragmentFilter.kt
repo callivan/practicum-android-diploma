@@ -8,6 +8,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -82,12 +84,17 @@ class FragmentFilter : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 when (p0.toString().isNotEmpty()) {
                     true -> {
-                        binding.includedSalary.textFieldHeader.text =
-                            requireContext().getString(R.string.filter_main_salary)
+                        binding.includedSalary.apply {
+                            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+                            textFieldClear.isVisible = true
+                        }
                     }
 
                     false -> {
-                        binding.includedSalary.textFieldHeader.text = ""
+                        binding.includedSalary.apply {
+                            textFieldHeader.text = ""
+                            textFieldClear.isVisible = false
+                        }
                     }
                 }
 
@@ -156,6 +163,9 @@ class FragmentFilter : Fragment() {
             }
 
             textFieldClear.setOnClickListener {
+                textFieldHeader.text = ""
+                textFieldClear.isVisible = false
+                textFieldEdit.setText("")
                 viewModel.setSalary(null)
             }
         }
@@ -198,11 +208,6 @@ class FragmentFilter : Fragment() {
                     )
                 }
             }
-            textFieldClear.setOnClickListener {
-                textFieldHeader.text = ""
-                textFieldClear.isVisible = false
-                textFieldEdit.setText("")
-            }
         }
     }
 
@@ -232,6 +237,17 @@ class FragmentFilter : Fragment() {
             textFieldHeader.hint = requireContext().getString(R.string.filter_main_salary)
             textFieldEdit.hint = requireContext().getString(R.string.filter_main_salary_hint)
             textFieldEdit.inputType = InputType.TYPE_CLASS_NUMBER
+            textFieldEdit.imeOptions = EditorInfo.IME_ACTION_DONE
+            textFieldEdit.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    v.clearFocus()
+                    val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    true
+                } else {
+                    false
+                }
+            }
         }
 
         binding.includedShowNoSalary.apply {
