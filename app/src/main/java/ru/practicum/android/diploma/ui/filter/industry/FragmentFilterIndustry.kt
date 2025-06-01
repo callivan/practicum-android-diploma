@@ -28,6 +28,7 @@ class FragmentFilterIndustry : Fragment() {
 
         IndustryAdapter(prevSelectedIndustry = prevSelectedIndustry) { selectedIndustry ->
             viewModel.setIndustry(selectedIndustry)
+            binding.buttonBlueLayout.isVisible = selectedIndustry != null
         }
     }
 
@@ -59,6 +60,7 @@ class FragmentFilterIndustry : Fragment() {
             topBar.btnThird.isVisible = false
             topBar.header.text = "Выбор отрасли"
             editText.editTextSearch.hint = "Введите отрасль"
+            buttonBlue.buttonBlue.text = "Выбрать"
         }
     }
 
@@ -68,6 +70,10 @@ class FragmentFilterIndustry : Fragment() {
         }
 
         binding.topBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.buttonBlue.buttonBlue.setOnClickListener {
             findNavController().popBackStack()
         }
 
