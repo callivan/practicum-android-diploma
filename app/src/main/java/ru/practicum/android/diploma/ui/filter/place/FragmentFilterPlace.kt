@@ -123,7 +123,7 @@ class FragmentFilterPlace : Fragment() {
             findNavController().popBackStack()
         }
 
-        binding.buttonBlue.buttonBlue.setOnClickListener{
+        binding.buttonBlue.buttonBlue.setOnClickListener {
             findNavController().popBackStack()
         }
 
