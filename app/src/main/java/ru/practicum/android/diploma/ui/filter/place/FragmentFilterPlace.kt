@@ -69,6 +69,9 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemText.text = "Регион"
         binding.region.itemTextTop.isVisible = false
         binding.region.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+
+        binding.buttonBlue.buttonBlue.text = "Выбрать"
+        binding.buttonBlue.buttonBlue.isVisible = false
     }
 
     private fun setCountryContent() {
@@ -84,6 +87,7 @@ class FragmentFilterPlace : Fragment() {
         binding.country.itemTextTop.text = "Страна"
         binding.country.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.country.itemText.text = country.name
+        binding.buttonBlueLayout.isVisible = true
     }
 
     private fun setRegionContent() {
@@ -99,6 +103,7 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemTextTop.text = "Регион"
         binding.region.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.region.itemText.text = region.name
+        binding.buttonBlue.buttonBlue.isVisible = true
     }
 
     private fun navFun() {
@@ -118,6 +123,10 @@ class FragmentFilterPlace : Fragment() {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)
         }
         binding.topBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.buttonBlue.buttonBlue.setOnClickListener {
             findNavController().popBackStack()
         }
 
