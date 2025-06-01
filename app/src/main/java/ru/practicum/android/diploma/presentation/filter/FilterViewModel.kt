@@ -85,7 +85,7 @@ class FilterViewModel(
         if (filters == null) {
             filters = VacanciesFilters(salary = data?.toInt())
         } else {
-            filters = filters?.copy(salary = if (isEmpty) null else if (isNotEmpty) data.toInt() else null)
+            filters = filters?.copy(salary = if (isEmpty) null else if (isNotEmpty) data?.toInt() else null)
         }
     }
 
