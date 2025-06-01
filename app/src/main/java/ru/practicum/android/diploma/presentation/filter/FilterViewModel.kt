@@ -47,8 +47,12 @@ class FilterViewModel(
         }
 
         industriesScreenState.postValue(
-            if (filteredIndustries.isEmpty()) ScreenState.Empty
-            else ScreenState.Success(filteredIndustries)
+            if (filteredIndustries.isEmpty()) {
+                ScreenState.Empty
+            }
+            else {
+                ScreenState.Success(filteredIndustries)
+            }
         )
     }
 
