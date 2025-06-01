@@ -42,4 +42,33 @@
             layout="@layout/loader" />
     </LinearLayout>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/placeholder_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarLayout"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/placeholder_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/err_load_list" />
+
+        <TextView
+            android:id="@+id/placeholder_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/err_load_list"
+            android:textAlignment="center"
+            android:textAppearance="@style/text_font_l" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
