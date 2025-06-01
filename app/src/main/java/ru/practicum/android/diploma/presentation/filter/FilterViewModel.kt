@@ -40,9 +40,16 @@ class FilterViewModel(
     }
 
     private val industriesInputDebouncer = debounce<String>(INPUT_DELAY, viewModelScope, true) { text ->
-        val filteredIndustries = industries.filter { it.name.contains(text, ignoreCase = true) }
+        val filteredIndustries = if (text.isBlank()) {
+            industries
+        } else {
+            industries.filter { it.name.contains(text, ignoreCase = true) }
+        }
 
-        industriesScreenState.postValue(ScreenState.Success(filteredIndustries))
+        industriesScreenState.postValue(
+            if (filteredIndustries.isEmpty()) ScreenState.Empty
+            else ScreenState.Success(filteredIndustries)
+        )
     }
 
     private val industriesScreenState = MutableLiveData<ScreenState<List<Industry>>>(ScreenState.Init)
