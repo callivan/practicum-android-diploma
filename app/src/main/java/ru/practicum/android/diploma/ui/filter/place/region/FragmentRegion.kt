@@ -108,12 +108,12 @@ class FragmentRegion : Fragment() {
         }
     }
 
-    private fun showContent(){
+    private fun showContent() {
         binding.includedErrEmpty.root.isVisible = false
         binding.regionList.isVisible = true
     }
 
-    private fun showPlaceholder(type: String){
+    private fun showPlaceholder(type: String) {
         binding.regionList.isVisible = false
         binding.includedErrEmpty.apply {
             when (type) {
