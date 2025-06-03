@@ -157,7 +157,10 @@ class FragmentVacancy : Fragment() {
         if (vacancy.salaryRangeTo != null) {
             salaryString += "до ${vacancy.salaryRangeTo} "
         }
-        salaryString += getCurrencySymbol(vacancy.salaryRangeCurrency!!)
+        if(vacancy.salaryRangeCurrency != null) {
+            salaryString += getCurrencySymbol(vacancy.salaryRangeCurrency)
+        }
+
         binding.vacancySalary.text = salaryString
         binding.includedVacancyCard.titleVacancyCard.text = vacancy.employer
         binding.includedVacancyCard.cityVacancyCard.text = vacancy.address?.split(',')?.get(0) ?: ""
