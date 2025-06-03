@@ -75,6 +75,7 @@ class FragmentVacancy : Fragment() {
                 true -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
                 false -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
             }
+            isFavorite = state
         }
 
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
