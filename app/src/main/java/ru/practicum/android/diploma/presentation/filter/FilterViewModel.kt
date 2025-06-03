@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.Area
-import ru.practicum.android.diploma.domain.models.AreaChildResponse
 import ru.practicum.android.diploma.domain.models.AreasInteractor
 import ru.practicum.android.diploma.domain.models.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.Industry
@@ -37,7 +36,7 @@ class FilterViewModel(
         val filteredRegions = regions.filter { it.name.contains(text, ignoreCase = true) }
 
         if (filteredRegions.isNotEmpty()) {
-            regionsScreenState.postValue(ScreenState.Success(AreaChildResponse(areas = filteredRegions)))
+            regionsScreenState.postValue(ScreenState.Success(filteredRegions))
         } else {
             regionsScreenState.postValue(ScreenState.Empty)
         }
@@ -60,11 +59,11 @@ class FilterViewModel(
     }
 
     private val industriesScreenState = MutableLiveData<ScreenState<List<Industry>>>(ScreenState.Init)
-    private val regionsScreenState = MutableLiveData<ScreenState<AreaChildResponse>>(ScreenState.Init)
+    private val regionsScreenState = MutableLiveData<ScreenState<List<Area>>>(ScreenState.Init)
     private val countriesScreenState = MutableLiveData<ScreenState<List<Area>>>(ScreenState.Init)
 
     fun getIndustriesScreenState(): LiveData<ScreenState<List<Industry>>> = industriesScreenState
-    fun getRegionsScreenState(): LiveData<ScreenState<AreaChildResponse>> = regionsScreenState
+    fun getRegionsScreenState(): LiveData<ScreenState<List<Area>>> = regionsScreenState
     fun getCountriesScreenState(): LiveData<ScreenState<List<Area>>> = countriesScreenState
 
     fun filtersConcatenation() {
@@ -99,7 +98,7 @@ class FilterViewModel(
         println(data)
         if (filters == null) {
 
-            if(data == null) {
+            if (data == null) {
                 return
             } else {
                 filters = VacanciesFilters(salary = data.toInt())
@@ -209,17 +208,21 @@ class FilterViewModel(
         }
     }
 
-    fun getCountryRegions(countryId: String) {
+    fun getCountryRegions(countryId: String? = null) {
         regionsScreenState.postValue(ScreenState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
-            areasInteractor.getAreaChildById(countryId).collect { state ->
+            areasInteractor.gerAreas().collect { state ->
                 when (state) {
                     is ResponseStatus.Success -> {
-                        if (state.data.areas.isNotEmpty()) {
-                            regionsScreenState.postValue(ScreenState.Success(state.data))
+                        if (state.data.isNotEmpty()) {
+                            if (countryId == null) {
+                                regions.addAll(state.data.flatMap { it.areas })
+                            } else {
+                                regions.addAll(state.data.filter { it.id == countryId }.flatMap { it.areas })
+                            }
 
-                            regions.addAll(state.data.areas)
+                            regionsScreenState.postValue(ScreenState.Success(regions))
                         } else {
                             regionsScreenState.postValue(ScreenState.Empty)
                         }

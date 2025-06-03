@@ -9,17 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.NetworkClient
 import ru.practicum.android.diploma.data.SharedPrefs
-import ru.practicum.android.diploma.data.converters.AreaChildResponseDbConverter
 import ru.practicum.android.diploma.data.converters.AreaDbConverter
 import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyShortDbConverter
 import ru.practicum.android.diploma.data.db.AppDb
-import ru.practicum.android.diploma.data.deserializers.AreaChildResponseDeserializer
 import ru.practicum.android.diploma.data.deserializers.VacanciesResponseDeserializer
 import ru.practicum.android.diploma.data.deserializers.VacancyResponseDeserializer
-import ru.practicum.android.diploma.data.dto.AreaChildResponseDto
 import ru.practicum.android.diploma.data.dto.VacanciesFiltersDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponseDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailsDto
@@ -48,8 +45,6 @@ val dataModule = module {
         AreaDbConverter()
     }
 
-    factory<AreaChildResponseDbConverter> { AreaChildResponseDbConverter() }
-
     single<AppDb> {
         Room.databaseBuilder(androidContext(), AppDb::class.java, "database").build()
     }
@@ -61,10 +56,7 @@ val dataModule = module {
 
         val responseDeserializer =
             GsonBuilder().registerTypeAdapter(VacanciesResponseDto::class.java, VacanciesResponseDeserializer())
-                .registerTypeAdapter(VacancyDetailsDto::class.java, VacancyResponseDeserializer()).registerTypeAdapter(
-                    AreaChildResponseDto::class.java,
-                    AreaChildResponseDeserializer()
-                ).create()
+                .registerTypeAdapter(VacancyDetailsDto::class.java, VacancyResponseDeserializer()).create()
 
         Retrofit.Builder().baseUrl(HH_API_BASE_URL).client(interceptors)
             .addConverterFactory(GsonConverterFactory.create(responseDeserializer)).build()
