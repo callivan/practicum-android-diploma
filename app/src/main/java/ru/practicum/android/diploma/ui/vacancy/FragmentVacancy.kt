@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.vacancy
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ class FragmentVacancy : Fragment() {
     val viewModel by viewModel<VacancyViewModel>()
 
     private var currentVacancy: VacancyDetails? = null
-    private var isFavorite: Boolean = false // Временно
+    private var isFavorite: Boolean = false
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding
@@ -55,7 +56,12 @@ class FragmentVacancy : Fragment() {
         }
 
         binding.includedTopBar.btnSecond.setOnClickListener {
-            // Скоро будет
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, currentVacancy?.alternateUrl)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            requireContext().startActivity(shareIntent)
         }
 
         binding.includedTopBar.btnThird.setOnClickListener {
