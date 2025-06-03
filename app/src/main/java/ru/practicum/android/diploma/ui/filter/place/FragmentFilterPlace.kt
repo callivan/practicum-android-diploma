@@ -23,7 +23,9 @@ class FragmentFilterPlace : Fragment() {
     private val viewModel by viewModel<FilterViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilterPlaceBinding.inflate(inflater, container, false)
         return binding.root
@@ -114,9 +116,11 @@ class FragmentFilterPlace : Fragment() {
             val selectedCountry = viewModel.getFilters()?.area?.get(0)
 
             findNavController().navigate(
-                R.id.action_fragmentFilterPlace_to_fragmentRegion, Bundle().apply {
+                R.id.action_fragmentFilterPlace_to_fragmentRegion,
+                Bundle().apply {
                     putString(COUNTRY_ID, selectedCountry?.id)
-                })
+                }
+            )
         }
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)

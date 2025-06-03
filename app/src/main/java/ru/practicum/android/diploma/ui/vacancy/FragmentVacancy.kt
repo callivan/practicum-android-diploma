@@ -157,7 +157,7 @@ class FragmentVacancy : Fragment() {
         if (vacancy.salaryRangeTo != null) {
             salaryString += "до ${vacancy.salaryRangeTo} "
         }
-        if(vacancy.salaryRangeCurrency != null) {
+        if (vacancy.salaryRangeCurrency != null) {
             salaryString += getCurrencySymbol(vacancy.salaryRangeCurrency)
         }
 
