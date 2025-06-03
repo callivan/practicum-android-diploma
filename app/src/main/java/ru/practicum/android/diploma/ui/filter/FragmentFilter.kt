@@ -269,9 +269,7 @@ class FragmentFilter : Fragment() {
         val isArea = filters?.area?.isNotEmpty() == true || filters?.area != null
         val isIndustry = filters?.industry?.isNotEmpty() == true || filters?.industry != null
 
-        if (isSalary || isOnlyWithSalary || isArea || isIndustry) {
-            state = true
-        }
+        state = isSalary || isOnlyWithSalary || isArea || isIndustry
 
         binding.includedBtnSet.root.isVisible = state
         binding.includedBtnCancel.root.isVisible = state
