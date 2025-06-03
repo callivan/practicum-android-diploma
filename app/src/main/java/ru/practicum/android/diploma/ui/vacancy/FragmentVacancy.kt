@@ -136,7 +136,6 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showContent(vacancy: VacancyDetails) {
-
         viewModel.checkFavorite(vacancy.id)
 
         binding.includedProgressBar.root.isVisible = false
