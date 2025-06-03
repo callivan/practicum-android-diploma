@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.R.color.black
 import ru.practicum.android.diploma.R.color.gray
 import ru.practicum.android.diploma.databinding.FragmentFilterPlaceBinding
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
@@ -85,7 +84,6 @@ class FragmentFilterPlace : Fragment() {
         binding.country.itemTextTop.isVisible = true
         binding.country.itemIcon.setImageResource(R.drawable.close_24px)
         binding.country.itemTextTop.text = "Страна"
-        binding.country.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.country.itemText.text = country.name
         binding.buttonBlueLayout.isVisible = true
     }
@@ -101,7 +99,6 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemTextTop.isVisible = true
         binding.region.itemIcon.setImageResource(R.drawable.close_24px)
         binding.region.itemTextTop.text = "Регион"
-        binding.region.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.region.itemText.text = region.name
         binding.buttonBlue.buttonBlue.isVisible = true
     }

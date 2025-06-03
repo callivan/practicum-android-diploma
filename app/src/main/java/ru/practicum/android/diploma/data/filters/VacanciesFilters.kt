@@ -45,7 +45,6 @@ class VacanciesFilters(private val context: Context) : SharedPrefs<VacanciesFilt
     }
 
     override fun clean() {
-        println("CLEAN")
         add(VacanciesFiltersDto())
     }
 

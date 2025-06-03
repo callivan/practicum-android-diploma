@@ -71,35 +71,44 @@ class FilterViewModel(
         filters = vacanciesFiltersInteractor.get()
     }
 
-    fun filterChanged(): Boolean {
-        return filters != vacanciesFiltersInteractor.get()
-    }
-
     fun setIndustry(data: Industry?) {
         if (filters == null) {
             filters = VacanciesFilters()
         }
 
         filters = filters?.copy(industry = if (data != null) mutableListOf(data) else null)
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
     }
 
     fun setArea(data: MutableList<Area>? = null) {
-        println(data)
         if (filters == null) {
             filters = VacanciesFilters(area = data)
         } else {
             filters = filters?.copy(area = data)
         }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
     }
 
-    fun setSalary(data: String?) {
-        val isEmpty = data != null && data.isEmpty()
-        val isNotEmpty = data != null && data.isNotEmpty()
-
+    fun setSalary(data: Int?) {
+        println(data)
         if (filters == null) {
-            filters = VacanciesFilters(salary = data?.toInt())
+            if (data == null) {
+                return
+            } else {
+                filters = VacanciesFilters(salary = data.toInt())
+            }
         } else {
-            filters = filters?.copy(salary = if (isEmpty) null else if (isNotEmpty) data?.toInt() else null)
+            filters = filters?.copy(salary = data)
+        }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
         }
     }
 
@@ -108,6 +117,10 @@ class FilterViewModel(
             filters = VacanciesFilters(onlyWithSalary = true)
         } else {
             filters = filters?.copy(onlyWithSalary = !filters?.onlyWithSalary!!)
+        }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
         }
     }
 
@@ -219,12 +232,6 @@ class FilterViewModel(
 
     fun getFilters(): VacanciesFilters? {
         return filters
-    }
-
-    fun addFilters() {
-        if (filters == null) return
-
-        vacanciesFiltersInteractor.add(filters!!)
     }
 
     fun cleanFilters() {

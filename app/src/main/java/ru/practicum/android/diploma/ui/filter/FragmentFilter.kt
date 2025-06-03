@@ -59,7 +59,6 @@ class FragmentFilter : Fragment() {
         }
 
         binding.includedBtnSet.root.setOnClickListener {
-            viewModel.addFilters()
             closeFragment()
         }
 
@@ -98,7 +97,7 @@ class FragmentFilter : Fragment() {
                     }
                 }
 
-                viewModel.setSalary(p0.toString())
+                viewModel.setSalary(if (p0.toString().isNotEmpty()) p0.toString().toInt() else null)
                 switchButtonsVisibility()
             }
 
@@ -150,10 +149,10 @@ class FragmentFilter : Fragment() {
 
     private fun setSalaryContent() {
         switchButtonsVisibility()
+
         val filters = viewModel.getFilters()
 
         binding.includedSalary.apply {
-
             if (filters?.salary != null && filters.salary != 0) {
                 textFieldClear.isVisible = true
                 textFieldEdit.setText(filters.salary.toString())
@@ -263,9 +262,16 @@ class FragmentFilter : Fragment() {
     }
 
     private fun switchButtonsVisibility() {
-        val isVisible = viewModel.filterChanged()
+        val filters = viewModel.getFilters()
+        var state = false
+        val isSalary = filters?.salary != null
+        val isOnlyWithSalary = filters?.onlyWithSalary == true
+        val isArea = filters?.area?.isNotEmpty() == true || filters?.area != null
+        val isIndustry = filters?.industry?.isNotEmpty() == true || filters?.industry != null
 
-        binding.includedBtnSet.root.isVisible = isVisible
-        binding.includedBtnCancel.root.isVisible = isVisible
+        state = isSalary || isOnlyWithSalary || isArea || isIndustry
+
+        binding.includedBtnSet.root.isVisible = state
+        binding.includedBtnCancel.root.isVisible = state
     }
 }
