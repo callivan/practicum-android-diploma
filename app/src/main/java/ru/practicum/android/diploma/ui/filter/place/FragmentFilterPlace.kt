@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.R.color.black
 import ru.practicum.android.diploma.R.color.gray
 import ru.practicum.android.diploma.databinding.FragmentFilterPlaceBinding
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
