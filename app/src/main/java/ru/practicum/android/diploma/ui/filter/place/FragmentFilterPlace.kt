@@ -85,7 +85,6 @@ class FragmentFilterPlace : Fragment() {
         binding.country.itemTextTop.isVisible = true
         binding.country.itemIcon.setImageResource(R.drawable.close_24px)
         binding.country.itemTextTop.text = "Страна"
-        binding.country.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.country.itemText.text = country.name
         binding.buttonBlueLayout.isVisible = true
     }
@@ -101,7 +100,6 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemTextTop.isVisible = true
         binding.region.itemIcon.setImageResource(R.drawable.close_24px)
         binding.region.itemTextTop.text = "Регион"
-        binding.region.itemText.setTextColor(ContextCompat.getColor(requireContext(), black))
         binding.region.itemText.text = region.name
         binding.buttonBlue.buttonBlue.isVisible = true
     }
