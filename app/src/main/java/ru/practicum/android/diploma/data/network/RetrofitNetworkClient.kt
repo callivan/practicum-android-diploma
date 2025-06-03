@@ -3,38 +3,42 @@ package ru.practicum.android.diploma.data.network
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.dto.RequestTypeDto
 import ru.practicum.android.diploma.data.dto.ResponseStatusDto
-import ru.practicum.android.diploma.data.dto.VacanciesRequestDto
-import ru.practicum.android.diploma.data.dto.toQueryMap
-import ru.practicum.android.diploma.domain.models.VacancyRequest
 import ru.practicum.android.diploma.util.safeApiCall
 
 class RetrofitNetworkClient(private val headHunterApiServices: HeadHunterApiServices) :
     NetworkClient {
-    override suspend fun request(dto: Any): ResponseStatusDto<Any> {
+    override suspend fun request(dto: RequestTypeDto): ResponseStatusDto<Any> {
         return withContext(Dispatchers.IO) {
             when (dto) {
-                is VacanciesRequestDto -> {
+                is RequestTypeDto.RequestVacancies -> {
                     safeApiCall {
                         headHunterApiServices.getVacancies(
-                            VacanciesRequestDto(
-                                text = dto.text,
-                                page = dto.page,
-                                area = dto.area,
-                                salary = dto.salary,
-                                onlyWithSalary = dto.onlyWithSalary,
-                                professionalRole = dto.professionalRole
-                            ).toQueryMap()
+                            text = dto.data.text,
+                            page = dto.data.page,
+                            area = dto.data.area,
+                            salary = dto.data.salary,
+                            onlyWithSalary = dto.data.onlyWithSalary,
+                            industry = dto.data.industry
                         )
                     }
                 }
 
-                is VacancyRequest -> {
+                is RequestTypeDto.RequestVacancy -> {
                     safeApiCall { headHunterApiServices.getVacancyById(dto.vacancyId) }
                 }
 
-                else -> {
-                    ResponseStatusDto.UnknownError(null)
+                is RequestTypeDto.RequestIndustries -> {
+                    safeApiCall { headHunterApiServices.getIndustries() }
+                }
+
+                is RequestTypeDto.RequestAreas -> {
+                    safeApiCall { headHunterApiServices.getAreas() }
+                }
+
+                is RequestTypeDto.RequestAreaChild -> {
+                    safeApiCall { headHunterApiServices.getAreaChildById(dto.areaId) }
                 }
             }
         }

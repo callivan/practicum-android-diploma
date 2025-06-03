@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacancyDetails
-import ru.practicum.android.diploma.domain.models.VacancyRequest
 import ru.practicum.android.diploma.presentation.mappers.toScreenState
 import ru.practicum.android.diploma.presentation.models.ScreenState
 
@@ -26,7 +25,7 @@ class VacancyViewModel(
 
         viewModelScope.launch {
             if (isInternetAvailable) {
-                vacanciesInteractor.getVacancyById(VacancyRequest(vacancyId))
+                vacanciesInteractor.getVacancyById(vacancyId)
                     .collect { state ->
                         screenState.postValue(state.toScreenState())
                     }

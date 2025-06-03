@@ -8,6 +8,7 @@ import android.view.WindowInsetsController
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import ru.practicum.android.diploma.BuildConfig
@@ -78,5 +79,9 @@ class RootActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         syncStatusBarWithAppTheme()
+    }
+
+    fun switchNavBarVisibility() {
+        binding!!.bottomNavigation.bottomNavigation.isVisible = !binding!!.bottomNavigation.bottomNavigation.isVisible
     }
 }

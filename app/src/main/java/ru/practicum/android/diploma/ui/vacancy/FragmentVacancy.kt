@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.presentation.vacancy.VacancyViewModel
+import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.util.isConnected
 import java.util.Currency
 
@@ -46,11 +47,11 @@ class FragmentVacancy : Fragment() {
         fillTopBar()
 
         binding.includedTopBar.btnFirst.setOnClickListener {
-            findNavController().popBackStack()
+            closeFragment()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().popBackStack()
+            closeFragment()
         }
 
         binding.includedTopBar.btnSecond.setOnClickListener {
@@ -177,5 +178,10 @@ class FragmentVacancy : Fragment() {
     companion object {
         const val ID_VACANCY = "id_vacancy"
         const val IMG_CORNER = 12
+    }
+
+    private fun closeFragment() {
+        (activity as RootActivity).switchNavBarVisibility()
+        findNavController().popBackStack()
     }
 }

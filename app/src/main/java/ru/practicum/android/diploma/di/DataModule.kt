@@ -8,20 +8,28 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.SharedPrefs
+import ru.practicum.android.diploma.data.converters.AreaChildResponseDbConverter
+import ru.practicum.android.diploma.data.converters.AreaDbConverter
+import ru.practicum.android.diploma.data.converters.IndustryDbConverter
 import ru.practicum.android.diploma.data.converters.VacanciesResponseDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.data.converters.VacancyShortDbConverter
 import ru.practicum.android.diploma.data.db.AppDb
+import ru.practicum.android.diploma.data.deserializers.AreaChildResponseDeserializer
 import ru.practicum.android.diploma.data.deserializers.VacanciesResponseDeserializer
 import ru.practicum.android.diploma.data.deserializers.VacancyResponseDeserializer
+import ru.practicum.android.diploma.data.dto.AreaChildResponseDto
+import ru.practicum.android.diploma.data.dto.VacanciesFiltersDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponseDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.data.filters.VacanciesFilters
 import ru.practicum.android.diploma.data.interceptors.AuthInterceptor
 import ru.practicum.android.diploma.data.interceptors.InternetAvailableInterceptor
 import ru.practicum.android.diploma.data.network.HeadHunterApiServices
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 
-const val HH_API_BASE_URL = "https://api.hh.ru"
+private const val HH_API_BASE_URL = "https://api.hh.ru"
 
 val dataModule = module {
     factory<VacancyShortDbConverter> {
@@ -31,6 +39,16 @@ val dataModule = module {
     factory<VacancyDetailsDbConverter> { VacancyDetailsDbConverter() }
 
     factory<VacanciesResponseDbConverter> { VacanciesResponseDbConverter() }
+
+    factory<IndustryDbConverter> {
+        IndustryDbConverter()
+    }
+
+    factory<AreaDbConverter> {
+        AreaDbConverter()
+    }
+
+    factory<AreaChildResponseDbConverter> { AreaChildResponseDbConverter() }
 
     single<AppDb> {
         Room.databaseBuilder(androidContext(), AppDb::class.java, "database").build()
@@ -43,7 +61,10 @@ val dataModule = module {
 
         val responseDeserializer =
             GsonBuilder().registerTypeAdapter(VacanciesResponseDto::class.java, VacanciesResponseDeserializer())
-                .registerTypeAdapter(VacancyDetailsDto::class.java, VacancyResponseDeserializer()).create()
+                .registerTypeAdapter(VacancyDetailsDto::class.java, VacancyResponseDeserializer()).registerTypeAdapter(
+                    AreaChildResponseDto::class.java,
+                    AreaChildResponseDeserializer()
+                ).create()
 
         Retrofit.Builder().baseUrl(HH_API_BASE_URL).client(interceptors)
             .addConverterFactory(GsonConverterFactory.create(responseDeserializer)).build()
@@ -52,5 +73,9 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(get<HeadHunterApiServices>())
+    }
+
+    factory<SharedPrefs<VacanciesFiltersDto>> {
+        VacanciesFilters(androidContext())
     }
 }

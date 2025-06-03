@@ -1,3 +1,3 @@
 package ru.practicum.android.diploma.domain.models
 
-data class VacancyRequest(val vacancyId: String)
+data class Area(val id: String, val name: String)

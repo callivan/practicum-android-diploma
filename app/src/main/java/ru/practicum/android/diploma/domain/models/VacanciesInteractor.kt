@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 interface VacanciesInteractor {
     fun getVacancies(queries: VacanciesRequest): Flow<ResponseStatus<VacanciesResponse>>
 
-    fun getVacancyById(data: VacancyRequest): Flow<ResponseStatus<VacancyDetails>>
+    fun getVacancyById(vacancyId: String): Flow<ResponseStatus<VacancyDetails>>
 }
