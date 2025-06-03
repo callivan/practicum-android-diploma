@@ -36,7 +36,11 @@ class FilterViewModel(
     private val regionsInputDebouncer = debounce<String>(INPUT_DELAY, viewModelScope, true) { text ->
         val filteredRegions = regions.filter { it.name.contains(text, ignoreCase = true) }
 
-        regionsScreenState.postValue(ScreenState.Success(AreaChildResponse(areas = filteredRegions)))
+        if (filteredRegions.isNotEmpty()) {
+            regionsScreenState.postValue(ScreenState.Success(AreaChildResponse(areas = filteredRegions)))
+        } else {
+            regionsScreenState.postValue(ScreenState.Empty)
+        }
     }
 
     private val industriesInputDebouncer = debounce<String>(INPUT_DELAY, viewModelScope, true) { text ->
