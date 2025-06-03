@@ -98,8 +98,7 @@ class FilterViewModel(
     fun setSalary(data: Int?) {
         println(data)
         if (filters == null) {
-
-            if(data == null) {
+            if (data == null) {
                 return
             } else {
                 filters = VacanciesFilters(salary = data.toInt())

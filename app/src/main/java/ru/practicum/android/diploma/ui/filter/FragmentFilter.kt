@@ -97,7 +97,7 @@ class FragmentFilter : Fragment() {
                     }
                 }
 
-                viewModel.setSalary(if(p0.toString().isNotEmpty()) p0.toString().toInt() else null)
+                viewModel.setSalary(if (p0.toString().isNotEmpty()) p0.toString().toInt() else null)
                 switchButtonsVisibility()
             }
 
@@ -153,7 +153,6 @@ class FragmentFilter : Fragment() {
         val filters = viewModel.getFilters()
 
         binding.includedSalary.apply {
-
             if (filters?.salary != null && filters.salary != 0) {
                 textFieldClear.isVisible = true
                 textFieldEdit.setText(filters.salary.toString())
@@ -267,10 +266,10 @@ class FragmentFilter : Fragment() {
         var state = false
         val isSalary = filters?.salary != null
         val isOnlyWithSalary = filters?.onlyWithSalary == true
-        val isArea =  filters?.area?.isNotEmpty() == true || filters?.area != null
+        val isArea = filters?.area?.isNotEmpty() == true || filters?.area != null
         val isIndustry = filters?.industry?.isNotEmpty() == true || filters?.industry != null
 
-        if(isSalary || isOnlyWithSalary || isArea || isIndustry) {
+        if (isSalary || isOnlyWithSalary || isArea || isIndustry) {
             state = true
         }
 
