@@ -106,4 +106,12 @@
         <item name="android:lineHeight">@dimen/line_height_s</item>
         <item name="android:textColor">@color/gray</item>
     </style>
+    
+    <style name="colorPlaceFilter">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="colorPlaceFilterDefault">
+        <item name="android:textColor">@color/gray</item>
+    </style>
 </resources>
