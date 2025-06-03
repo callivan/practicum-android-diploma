@@ -66,7 +66,9 @@ class FragmentFilterPlace : Fragment() {
         val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
 
         binding.country.itemTextTop.isVisible = country != null
-        binding.country.itemIcon.setImageResource(if (country == null) R.drawable.arrow_forward_24px else R.drawable.close_24px)
+        binding.country.itemIcon.setImageResource(
+            if (country == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
+        )
         binding.country.itemTextTop.text = "Страна"
         binding.country.itemText.text = if (country == null) "Страна" else country.name
         binding.buttonBlueLayout.isVisible = country != null
@@ -83,7 +85,9 @@ class FragmentFilterPlace : Fragment() {
         val region = if (filters?.area?.isNotEmpty() == true && filters.area.size > 1) filters.area[1] else null
 
         binding.region.itemTextTop.isVisible = region != null
-        binding.region.itemIcon.setImageResource(if (region == null) R.drawable.arrow_forward_24px else R.drawable.close_24px)
+        binding.region.itemIcon.setImageResource(
+            if (region == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
+        )
         binding.region.itemTextTop.text = "Регион"
         binding.region.itemText.text = if (region == null) "Регион" else region.name
         binding.buttonBlueLayout.isVisible = region != null
