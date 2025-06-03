@@ -40,7 +40,6 @@ class FragmentFavotite : Fragment() {
         observeViewModel()
         setupRecyclerView()
         viewModel.getFavoriteVacancies()
-
     }
 
     private fun setupToolbar() {
@@ -76,20 +75,24 @@ class FragmentFavotite : Fragment() {
                     showContent(state.data)
                     binding.placeholderLayout.isVisible = true
                 }
+
                 is ScreenState.Empty -> showEmptyState()
                 is ScreenState.NotFound -> showError(getString(R.string.err_empty_list))
                 is ScreenState.NetworkError -> {
                     showError(getString(R.string.err_load_vacancy_list))
                     binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
                 }
+
                 is ScreenState.InternalServerError -> {
                     showError(getString(R.string.err_load_vacancy_list))
                     binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
                 }
+
                 is ScreenState.UnknownError -> {
                     showError(getString(R.string.err_load_vacancy_list))
                     binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)
                 }
+
                 else -> {
                     showError(getString(R.string.err_load_vacancy_list))
                     binding.placeholderImage.setImageResource(R.drawable.err_wtf_cat)

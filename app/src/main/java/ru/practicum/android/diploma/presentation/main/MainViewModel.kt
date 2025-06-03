@@ -28,14 +28,6 @@ class MainViewModel(
     private var pages: Int? = null
     private var vacancy: String? = null
 
-    init {
-        val filters = vacanciesFiltersInteractor.get()
-
-        if (filters?.isApply == true) {
-            getVacancies(VacanciesRequest(text = vacancy ?: "", page = 0))
-        }
-    }
-
     private var prevSearchVacancies: MutableList<VacancyShort> = mutableListOf()
 
     private val inputDebouncer = debounce<VacanciesRequest>(INPUT_DELAY, viewModelScope, true) { req ->
