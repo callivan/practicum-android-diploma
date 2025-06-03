@@ -105,7 +105,7 @@ class MainViewModel(
         val isArea = filters?.area != null
         val isIndustry = filters?.industry != null
 
-        return isFilters && (isArea || isSalary || filters.onlyWithSalary || isIndustry)
+        return isFilters && (isArea || isSalary || filters!!.onlyWithSalary || isIndustry)
     }
 
     fun loadMore(page: Int?) {
