@@ -70,6 +70,13 @@ class FragmentVacancy : Fragment() {
 
         viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
 
+        viewModel.getFavoriteIconState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                true -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
+                false -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+            }
+        }
+
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
             checkState(state)
         }
@@ -128,6 +135,9 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showContent(vacancy: VacancyDetails) {
+
+        viewModel.checkFavorite(vacancy.id)
+
         binding.includedProgressBar.root.isVisible = false
         binding.contentView.isVisible = true
         binding.includedErr.root.isVisible = false
