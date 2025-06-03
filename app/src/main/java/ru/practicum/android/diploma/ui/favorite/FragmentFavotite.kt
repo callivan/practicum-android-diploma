@@ -122,6 +122,7 @@ class FragmentFavotite : Fragment() {
 
     private fun showEmptyState() {
         with(binding) {
+            favouriteList.isVisible = false
             loader.isVisible = false
             placeholderLayout.isVisible = true
             placeholderText.isVisible = true
