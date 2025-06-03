@@ -8,6 +8,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -57,7 +59,7 @@ class FragmentFilter : Fragment() {
         }
 
         binding.includedBtnSet.root.setOnClickListener {
-            viewModel.addFilters()
+            viewModel.setApply(true)
             closeFragment()
         }
 
@@ -82,16 +84,21 @@ class FragmentFilter : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 when (p0.toString().isNotEmpty()) {
                     true -> {
-                        binding.includedSalary.textFieldHeader.text =
-                            requireContext().getString(R.string.filter_main_salary)
+                        binding.includedSalary.apply {
+                            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
+                            textFieldClear.isVisible = true
+                        }
                     }
 
                     false -> {
-                        binding.includedSalary.textFieldHeader.text = ""
+                        binding.includedSalary.apply {
+                            textFieldHeader.text = ""
+                            textFieldClear.isVisible = false
+                        }
                     }
                 }
 
-                viewModel.setSalary(p0.toString())
+                viewModel.setSalary(if (p0.toString().isNotEmpty()) p0.toString().toInt() else null)
                 switchButtonsVisibility()
             }
 
@@ -143,19 +150,22 @@ class FragmentFilter : Fragment() {
 
     private fun setSalaryContent() {
         switchButtonsVisibility()
+
         val filters = viewModel.getFilters()
 
         binding.includedSalary.apply {
-            textFieldHeader.text = requireContext().getString(R.string.filter_main_salary)
-
             if (filters?.salary != null && filters.salary != 0) {
                 textFieldClear.isVisible = true
                 textFieldEdit.setText(filters.salary.toString())
             } else {
                 textFieldClear.isVisible = false
+                textFieldEdit.setText("")
             }
 
             textFieldClear.setOnClickListener {
+                textFieldHeader.text = ""
+                textFieldClear.isVisible = false
+                textFieldEdit.setText("")
                 viewModel.setSalary(null)
             }
         }
@@ -183,11 +193,9 @@ class FragmentFilter : Fragment() {
             }
         }
         binding.includedPlace.root.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
             findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterPlace)
         }
         binding.includedIndustry.root.setOnClickListener {
-            (activity as RootActivity).switchNavBarVisibility()
             findNavController().navigate(R.id.action_fragmentFilter_to_fragmentFilterIndustry)
         }
         binding.includedSalary.apply {
@@ -199,11 +207,6 @@ class FragmentFilter : Fragment() {
                         requireContext().getColor(R.color.black)
                     )
                 }
-            }
-            textFieldClear.setOnClickListener {
-                textFieldHeader.text = ""
-                textFieldClear.isVisible = false
-                textFieldEdit.setText("")
             }
         }
     }
@@ -234,6 +237,17 @@ class FragmentFilter : Fragment() {
             textFieldHeader.hint = requireContext().getString(R.string.filter_main_salary)
             textFieldEdit.hint = requireContext().getString(R.string.filter_main_salary_hint)
             textFieldEdit.inputType = InputType.TYPE_CLASS_NUMBER
+            textFieldEdit.imeOptions = EditorInfo.IME_ACTION_DONE
+            textFieldEdit.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    v.clearFocus()
+                    val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    true
+                } else {
+                    false
+                }
+            }
         }
 
         binding.includedShowNoSalary.apply {
@@ -249,9 +263,16 @@ class FragmentFilter : Fragment() {
     }
 
     private fun switchButtonsVisibility() {
-        val isVisible = viewModel.filterChanged()
+        val filters = viewModel.getFilters()
+        var state = false
+        val isSalary = filters?.salary != null
+        val isOnlyWithSalary = filters?.onlyWithSalary == true
+        val isArea = filters?.area?.isNotEmpty() == true || filters?.area != null
+        val isIndustry = filters?.industry?.isNotEmpty() == true || filters?.industry != null
 
-        binding.includedBtnSet.root.isVisible = isVisible
-        binding.includedBtnCancel.root.isVisible = isVisible
+        state = isSalary || isOnlyWithSalary || isArea || isIndustry
+
+        binding.includedBtnSet.root.isVisible = state
+        binding.includedBtnCancel.root.isVisible = state
     }
 }

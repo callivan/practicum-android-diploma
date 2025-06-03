@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentCountryBinding
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.CountryAdapter
@@ -70,11 +71,21 @@ class FragmentCountry : Fragment() {
                 }
 
                 is ScreenState.Empty -> {
-                    // Обработка пустого состояния
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
+                    binding.placeholderLayout.isVisible = true
+                    binding.countryList.isVisible = false
+
+                    binding.placeholderImage.setImageResource(R.drawable.err_load_list)
+                    binding.placeholderText.text = "Ничего не найдено"
                 }
 
-                is ScreenState.Loading -> {
-                    binding.loaderWrapper.searchProgressBar.isVisible = true
+                is ScreenState.NetworkError -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
+                    binding.placeholderLayout.isVisible = true
+                    binding.countryList.isVisible = false
+
+                    binding.placeholderImage.setImageResource(R.drawable.err_no_connection)
+                    binding.placeholderText.text = "Нет интернета"
                 }
 
                 else -> {}

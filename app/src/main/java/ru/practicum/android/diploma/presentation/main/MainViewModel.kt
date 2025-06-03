@@ -38,6 +38,13 @@ class MainViewModel(
 
     fun getScreenState(): LiveData<ScreenState<VacanciesResponse>> = screenState
 
+    fun doRequest(s: String) {
+        inputDebouncer(VacanciesRequest(text = s))
+        prevSearchVacancies.clear()
+        pages = null
+        vacancy = s
+    }
+
     fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(
@@ -51,10 +58,7 @@ class MainViewModel(
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (vacancy != s.toString()) {
-                    inputDebouncer(VacanciesRequest(text = s.toString()))
-                    prevSearchVacancies.clear()
-                    pages = null
-                    vacancy = s.toString()
+                    doRequest(s.toString())
                 }
             }
 
@@ -101,7 +105,7 @@ class MainViewModel(
         val isArea = filters?.area != null
         val isIndustry = filters?.industry != null
 
-        return isFilters && (isArea || isSalary || filters.onlyWithSalary || isIndustry)
+        return isFilters && (isArea || isSalary || filters!!.onlyWithSalary || isIndustry)
     }
 
     fun loadMore(page: Int?) {

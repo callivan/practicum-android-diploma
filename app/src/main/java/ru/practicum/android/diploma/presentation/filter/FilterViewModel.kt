@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.Area
-import ru.practicum.android.diploma.domain.models.AreaChildResponse
 import ru.practicum.android.diploma.domain.models.AreasInteractor
 import ru.practicum.android.diploma.domain.models.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.Industry
@@ -36,29 +35,51 @@ class FilterViewModel(
     private val regionsInputDebouncer = debounce<String>(INPUT_DELAY, viewModelScope, true) { text ->
         val filteredRegions = regions.filter { it.name.contains(text, ignoreCase = true) }
 
-        regionsScreenState.postValue(ScreenState.Success(AreaChildResponse(areas = filteredRegions)))
+        if (filteredRegions.isNotEmpty()) {
+            regionsScreenState.postValue(ScreenState.Success(filteredRegions))
+        } else {
+            regionsScreenState.postValue(ScreenState.Empty)
+        }
     }
 
     private val industriesInputDebouncer = debounce<String>(INPUT_DELAY, viewModelScope, true) { text ->
-        val filteredIndustries = industries.filter { it.name.contains(text, ignoreCase = true) }
+        val filteredIndustries = if (text.isBlank()) {
+            industries
+        } else {
+            industries.filter { it.name.contains(text, ignoreCase = true) }
+        }
 
-        industriesScreenState.postValue(ScreenState.Success(filteredIndustries))
+        industriesScreenState.postValue(
+            if (filteredIndustries.isEmpty()) {
+                ScreenState.Empty
+            } else {
+                ScreenState.Success(filteredIndustries)
+            }
+        )
     }
 
     private val industriesScreenState = MutableLiveData<ScreenState<List<Industry>>>(ScreenState.Init)
-    private val regionsScreenState = MutableLiveData<ScreenState<AreaChildResponse>>(ScreenState.Init)
+    private val regionsScreenState = MutableLiveData<ScreenState<List<Area>>>(ScreenState.Init)
     private val countriesScreenState = MutableLiveData<ScreenState<List<Area>>>(ScreenState.Init)
 
     fun getIndustriesScreenState(): LiveData<ScreenState<List<Industry>>> = industriesScreenState
-    fun getRegionsScreenState(): LiveData<ScreenState<AreaChildResponse>> = regionsScreenState
+    fun getRegionsScreenState(): LiveData<ScreenState<List<Area>>> = regionsScreenState
     fun getCountriesScreenState(): LiveData<ScreenState<List<Area>>> = countriesScreenState
 
     fun filtersConcatenation() {
         filters = vacanciesFiltersInteractor.get()
     }
 
-    fun filterChanged(): Boolean {
-        return filters != vacanciesFiltersInteractor.get()
+    fun setApply(state: Boolean) {
+        if (filters == null) {
+            filters = VacanciesFilters()
+        }
+
+        filters = filters?.copy(isApply = state)
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
     }
 
     fun setIndustry(data: Industry?) {
@@ -67,25 +88,37 @@ class FilterViewModel(
         }
 
         filters = filters?.copy(industry = if (data != null) mutableListOf(data) else null)
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
     }
 
     fun setArea(data: MutableList<Area>? = null) {
-        println(data)
         if (filters == null) {
             filters = VacanciesFilters(area = data)
         } else {
             filters = filters?.copy(area = data)
         }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
     }
 
-    fun setSalary(data: String?) {
-        val isEmpty = data != null && data.isEmpty()
-        val isNotEmpty = data != null && data.isNotEmpty()
-
+    fun setSalary(data: Int?) {
         if (filters == null) {
-            filters = VacanciesFilters(salary = data?.toInt())
+            if (data == null) {
+                return
+            } else {
+                filters = VacanciesFilters(salary = data.toInt())
+            }
         } else {
-            filters = filters?.copy(salary = if (isEmpty) null else if (isNotEmpty) data.toInt() else null)
+            filters = filters?.copy(salary = data)
+        }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
         }
     }
 
@@ -94,6 +127,10 @@ class FilterViewModel(
             filters = VacanciesFilters(onlyWithSalary = true)
         } else {
             filters = filters?.copy(onlyWithSalary = !filters?.onlyWithSalary!!)
+        }
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
         }
     }
 
@@ -181,17 +218,21 @@ class FilterViewModel(
         }
     }
 
-    fun getCountryRegions(countryId: String) {
+    fun getCountryRegions(countryId: String? = null) {
         regionsScreenState.postValue(ScreenState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
-            areasInteractor.getAreaChildById(countryId).collect { state ->
+            areasInteractor.gerAreas().collect { state ->
                 when (state) {
                     is ResponseStatus.Success -> {
-                        if (state.data.areas.isNotEmpty()) {
-                            regionsScreenState.postValue(ScreenState.Success(state.data))
+                        if (state.data.isNotEmpty()) {
+                            if (countryId == null) {
+                                regions.addAll(state.data.flatMap { it.areas })
+                            } else {
+                                regions.addAll(state.data.filter { it.id == countryId }.flatMap { it.areas })
+                            }
 
-                            regions.addAll(state.data.areas)
+                            regionsScreenState.postValue(ScreenState.Success(regions))
                         } else {
                             regionsScreenState.postValue(ScreenState.Empty)
                         }
@@ -205,12 +246,6 @@ class FilterViewModel(
 
     fun getFilters(): VacanciesFilters? {
         return filters
-    }
-
-    fun addFilters() {
-        if (filters == null) return
-
-        vacanciesFiltersInteractor.add(filters!!)
     }
 
     fun cleanFilters() {

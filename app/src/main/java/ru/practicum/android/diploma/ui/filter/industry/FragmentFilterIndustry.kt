@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryAdapter
@@ -28,6 +29,7 @@ class FragmentFilterIndustry : Fragment() {
 
         IndustryAdapter(prevSelectedIndustry = prevSelectedIndustry) { selectedIndustry ->
             viewModel.setIndustry(selectedIndustry)
+            binding.buttonBlueLayout.isVisible = selectedIndustry != null
         }
     }
 
@@ -48,8 +50,6 @@ class FragmentFilterIndustry : Fragment() {
         observeViewModel()
         setupView()
         exit()
-
-        viewModel.getIndustries()
     }
 
     private fun setupView() {
@@ -59,15 +59,22 @@ class FragmentFilterIndustry : Fragment() {
             topBar.btnThird.isVisible = false
             topBar.header.text = "Выбор отрасли"
             editText.editTextSearch.hint = "Введите отрасль"
+            buttonBlue.buttonBlue.text = "Выбрать"
+            viewModel.getIndustries()
         }
     }
 
     private fun exit() {
         binding.editText.clearIcon.setOnClickListener {
             binding.editText.editTextSearch.text.clear()
+            viewModel.getIndustries()
         }
 
         binding.topBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.buttonBlue.buttonBlue.setOnClickListener {
             findNavController().popBackStack()
         }
 
@@ -108,17 +115,33 @@ class FragmentFilterIndustry : Fragment() {
 
                 is ScreenState.Success -> {
                     binding.loaderWrapper.searchProgressBar.isVisible = false
+                    binding.placeholderLayout.isVisible = false
+                    binding.industryList.isVisible = true
                     industryAdapter.submitList(state.data)
                 }
 
                 is ScreenState.Empty -> {
                     binding.loaderWrapper.searchProgressBar.isVisible = false
-                    // Empty
+                    binding.placeholderLayout.isVisible = true
+                    binding.industryList.isVisible = false
+
+                    binding.placeholderImage.setImageResource(R.drawable.err_load_list)
+                    binding.placeholderText.text = "Ничего не найдено"
+                }
+
+                is ScreenState.NetworkError -> {
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
+                    binding.placeholderLayout.isVisible = true
+                    binding.industryList.isVisible = false
+
+                    binding.placeholderImage.setImageResource(R.drawable.err_no_connection)
+                    binding.placeholderText.text = "Нет интернета"
                 }
 
                 else -> {
                     binding.loaderWrapper.searchProgressBar.isVisible = false
-                    // Empty
+                    binding.placeholderImage.setImageResource(R.drawable.err_load_list)
+                    binding.placeholderText.text = "Не удалось получить список"
                 }
             }
         }

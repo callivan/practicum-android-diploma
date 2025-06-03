@@ -4,5 +4,6 @@ data class VacanciesFilters(
     val area: MutableList<Area>? = null,
     val salary: Int? = null,
     val onlyWithSalary: Boolean = false,
-    val industry: List<Industry>? = null
+    val industry: List<Industry>? = null,
+    val isApply: Boolean? = false
 )

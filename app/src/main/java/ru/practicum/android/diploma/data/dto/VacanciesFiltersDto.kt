@@ -4,5 +4,6 @@ data class VacanciesFiltersDto(
     val area: List<AreaDto>? = null,
     val salary: Int? = null,
     val onlyWithSalary: Boolean = false,
-    val industry: List<IndustryDto>? = null
+    val industry: List<IndustryDto>? = null,
+    val isApply: Boolean? = false
 )

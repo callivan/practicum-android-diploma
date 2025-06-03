@@ -38,18 +38,6 @@ class FragmentFilterPlace : Fragment() {
         navFun()
         setCountryContent()
         setRegionContent()
-
-        binding.country.itemIcon.setOnClickListener {
-            viewModel.setArea(mutableListOf())
-            setCountryContent()
-        }
-
-        val country = viewModel.getFilters()?.area?.get(0)
-
-        binding.country.itemIcon.setOnClickListener {
-            viewModel.setArea(if (country != null) mutableListOf(country) else mutableListOf())
-            setRegionContent()
-        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -68,53 +56,80 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemText.text = "Регион"
         binding.region.itemTextTop.isVisible = false
         binding.region.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
+
+        binding.buttonBlue.buttonBlue.text = "Выбрать"
     }
 
     private fun setCountryContent() {
         val filters = viewModel.getFilters()
         val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
+        val region = if (filters?.area?.isNotEmpty() == true && filters.area.size > 1) filters.area[1] else null
 
-        if (country == null) {
-            return
-        }
+        binding.country.itemTextTop.isVisible = country != null
+        binding.country.itemIcon.setImageResource(
+            if (country == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
+        )
 
-        binding.country.itemTextTop.isVisible = true
-        binding.country.itemIcon.setImageResource(R.drawable.close_24px)
+        binding.country.itemText.setTextAppearance(
+            if (country != null) R.style.colorPlaceFilter else R.style.colorPlaceFilterDefault
+        )
+
         binding.country.itemTextTop.text = "Страна"
-        binding.country.itemText.text = country.name
+        binding.country.itemText.text = if (country == null) "Страна" else country.name
+        binding.buttonBlueLayout.isVisible = country != null || region != null
+
+        binding.country.itemIcon.setOnClickListener {
+            viewModel.setArea(null)
+            setCountryContent()
+            setRegionContent()
+        }
     }
 
     private fun setRegionContent() {
         val filters = viewModel.getFilters()
-        val region = filters?.area?.size?.let { if (it > 1) filters.area[1] else null }
+        val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
+        val region = if (filters?.area?.isNotEmpty() == true && filters.area.size > 1) filters.area[1] else null
 
-        if (region == null) {
-            return
-        }
+        binding.region.itemTextTop.isVisible = region != null
+        binding.region.itemIcon.setImageResource(
+            if (region == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
+        )
 
-        binding.region.itemTextTop.isVisible = true
-        binding.region.itemIcon.setImageResource(R.drawable.close_24px)
+        binding.region.itemText.setTextAppearance(
+            if (region != null) R.style.colorPlaceFilter else R.style.colorPlaceFilterDefault
+        )
+
         binding.region.itemTextTop.text = "Регион"
-        binding.region.itemText.text = region.name
+        binding.region.itemText.text = if (region == null) "Регион" else region.name
+        binding.buttonBlueLayout.isVisible = country != null || region != null
+
+        binding.region.itemIcon.setOnClickListener {
+            val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
+
+            viewModel.setArea(if (country != null) mutableListOf(country) else null)
+            setRegionContent()
+        }
     }
 
     private fun navFun() {
         binding.regionLayout.setOnClickListener {
             val selectedCountry = viewModel.getFilters()?.area?.get(0)
 
-            if (selectedCountry != null) {
-                findNavController().navigate(
-                    R.id.action_fragmentFilterPlace_to_fragmentRegion,
-                    Bundle().apply {
-                        putString(COUNTRY_ID, selectedCountry.id)
-                    }
-                )
-            }
+            findNavController().navigate(
+                R.id.action_fragmentFilterPlace_to_fragmentRegion,
+                Bundle().apply {
+                    putString(COUNTRY_ID, selectedCountry?.id)
+                }
+            )
         }
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)
         }
         binding.topBar.btnFirst.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.buttonBlue.buttonBlue.setOnClickListener {
             findNavController().popBackStack()
         }
 

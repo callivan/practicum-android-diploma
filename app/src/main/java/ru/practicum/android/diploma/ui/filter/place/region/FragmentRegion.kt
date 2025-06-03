@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
@@ -17,6 +18,12 @@ import ru.practicum.android.diploma.presentation.models.ScreenState
 import ru.practicum.android.diploma.ui.filter.place.FragmentFilterPlace
 
 class FragmentRegion : Fragment() {
+
+    companion object {
+        private const val PLACEHOLDER_EMPTY = "empty"
+        private const val PLACEHOLDER_ERR = "error"
+    }
+
     private var _binding: FragmentRegionBinding? = null
     private val binding get() = _binding!!
 
@@ -27,13 +34,15 @@ class FragmentRegion : Fragment() {
 
         if (area != null) {
             updatedArea.addAll(area)
-        }
 
-        if (updatedArea.size > 1) {
-            updatedArea.removeLastOrNull()
-        }
+            if (updatedArea.size > 1) {
+                updatedArea.removeLastOrNull()
+            }
 
-        updatedArea.add(selectedRegion)
+            updatedArea.add(selectedRegion)
+        } else {
+            autoSelectCountry(selectedRegion, updatedArea)
+        }
 
         viewModel.setArea(updatedArea)
         findNavController().popBackStack()
@@ -57,8 +66,12 @@ class FragmentRegion : Fragment() {
         setupSearch()
         navFun()
 
-        val countryId = arguments?.getString(FragmentFilterPlace.COUNTRY_ID) ?: return
+        val countryId = arguments?.getString(FragmentFilterPlace.COUNTRY_ID)
         viewModel.getCountryRegions(countryId)
+
+        if (countryId == null) {
+            viewModel.getCountries()
+        }
     }
 
     private fun setupView() {
@@ -74,26 +87,68 @@ class FragmentRegion : Fragment() {
         binding.regionList.adapter = adapter
     }
 
+    private fun autoSelectCountry(region: Area, areas: MutableList<Area>) {
+        viewModel.getCountriesScreenState().observe(viewLifecycleOwner) { state ->
+            if (state is ScreenState.Success) {
+                val country = state.data.firstOrNull { area ->
+                    area.areas.any { area -> area.id == region.id }
+                }
+
+                if (country != null) {
+                    areas.add(country)
+                    areas.add(region)
+                }
+            }
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.getRegionsScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScreenState.Loading -> {
+                    showContent()
                     binding.loaderWrapper.searchProgressBar.isVisible = true
                 }
 
                 is ScreenState.Success -> {
+                    showContent()
                     binding.loaderWrapper.searchProgressBar.isVisible = false
-                    adapter.updateList(state.data.areas)
+                    adapter.updateList(state.data)
                 }
 
                 is ScreenState.Empty -> {
+                    showPlaceholder(PLACEHOLDER_EMPTY)
                     adapter.updateList(emptyList())
                 }
 
                 else -> {
-                    // Обработка ошибок или Init
+                    binding.loaderWrapper.searchProgressBar.isVisible = false
+                    showPlaceholder(PLACEHOLDER_ERR)
                 }
             }
+        }
+    }
+
+    private fun showContent() {
+        binding.includedErrEmpty.root.isVisible = false
+        binding.regionList.isVisible = true
+    }
+
+    private fun showPlaceholder(type: String) {
+        binding.regionList.isVisible = false
+        binding.includedErrEmpty.apply {
+            when (type) {
+                PLACEHOLDER_ERR -> {
+                    placeholderImage.setImageResource(R.drawable.err_load_list)
+                    placeholderText.text = requireContext().getString(R.string.err_load_list)
+                }
+
+                PLACEHOLDER_EMPTY -> {
+                    placeholderImage.setImageResource(R.drawable.err_wtf_cat)
+                    placeholderText.text = requireContext().getString(R.string.err_cant_find_region)
+                }
+            }
+            root.isVisible = true
         }
     }
 

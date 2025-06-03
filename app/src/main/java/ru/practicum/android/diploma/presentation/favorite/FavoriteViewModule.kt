@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.domain.models.FavoriteVacanciesInteractor
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.presentation.models.ScreenState
@@ -21,12 +20,11 @@ class FavoriteViewModule(private val favoriteVacanciesInteractor: FavoriteVacanc
 
         viewModelScope.launch(Dispatchers.IO) {
             favoriteVacanciesInteractor.getFavoriteVacancies().collect { vacancies ->
-                withContext(Dispatchers.Main) {
-                    if (vacancies.isNotEmpty()) {
-                        screenState.postValue(ScreenState.Success(vacancies))
-                    } else {
-                        screenState.postValue(ScreenState.Empty)
-                    }
+                println(vacancies)
+                if (vacancies.isNotEmpty()) {
+                    screenState.postValue(ScreenState.Success(vacancies))
+                } else {
+                    screenState.postValue(ScreenState.Empty)
                 }
             }
         }

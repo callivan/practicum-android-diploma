@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.vacancy
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ class FragmentVacancy : Fragment() {
     val viewModel by viewModel<VacancyViewModel>()
 
     private var currentVacancy: VacancyDetails? = null
-    private var isFavorite: Boolean = false // Временно
+    private var isFavorite: Boolean = false
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding
@@ -55,7 +56,12 @@ class FragmentVacancy : Fragment() {
         }
 
         binding.includedTopBar.btnSecond.setOnClickListener {
-            // Скоро будет
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, currentVacancy?.alternateUrl)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            requireContext().startActivity(shareIntent)
         }
 
         binding.includedTopBar.btnThird.setOnClickListener {
@@ -69,6 +75,14 @@ class FragmentVacancy : Fragment() {
         }
 
         viewModel.getVacancyById(arguments?.getString(ID_VACANCY)!!, isConnected(requireContext()))
+
+        viewModel.getFavoriteIconState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                true -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_on__24px)
+                false -> binding.includedTopBar.btnThird.setImageResource(R.drawable.favorites_off__24px)
+            }
+            isFavorite = state
+        }
 
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
             checkState(state)
@@ -128,6 +142,8 @@ class FragmentVacancy : Fragment() {
     }
 
     private fun showContent(vacancy: VacancyDetails) {
+        viewModel.checkFavorite(vacancy.id)
+
         binding.includedProgressBar.root.isVisible = false
         binding.contentView.isVisible = true
         binding.includedErr.root.isVisible = false
@@ -141,7 +157,10 @@ class FragmentVacancy : Fragment() {
         if (vacancy.salaryRangeTo != null) {
             salaryString += "до ${vacancy.salaryRangeTo} "
         }
-        salaryString += getCurrencySymbol(vacancy.salaryRangeCurrency!!)
+        if (vacancy.salaryRangeCurrency != null) {
+            salaryString += getCurrencySymbol(vacancy.salaryRangeCurrency)
+        }
+
         binding.vacancySalary.text = salaryString
         binding.includedVacancyCard.titleVacancyCard.text = vacancy.employer
         binding.includedVacancyCard.cityVacancyCard.text = vacancy.address?.split(',')?.get(0) ?: ""
