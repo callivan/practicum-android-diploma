@@ -16,9 +16,20 @@ class VacancyViewModel(
     private val vacanciesInteractor: VacanciesInteractor,
     private val favoriteVacanciesInteractor: FavoriteVacanciesInteractor
 ) : ViewModel() {
-    private val screenState = MutableLiveData<ScreenState<VacancyDetails>>(ScreenState.Empty)
 
+    private val screenState = MutableLiveData<ScreenState<VacancyDetails>>(ScreenState.Empty)
     fun getScreenState(): LiveData<ScreenState<VacancyDetails>> = screenState
+
+    private val favoriteState = MutableLiveData<Boolean>(false)
+    fun getFavoriteIconState(): LiveData<Boolean> = favoriteState
+
+    fun checkFavorite(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteVacanciesInteractor.getFavoriteVacancyById(id).collect { state ->
+                favoriteState.postValue(state != null)
+            }
+        }
+    }
 
     fun getVacancyById(vacancyId: String, isInternetAvailable: Boolean) {
         screenState.postValue(ScreenState.Loading)
