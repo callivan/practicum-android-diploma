@@ -34,13 +34,15 @@ class FragmentRegion : Fragment() {
 
         if (area != null) {
             updatedArea.addAll(area)
-        }
 
-        if (updatedArea.size > 1) {
-            updatedArea.removeLastOrNull()
-        }
+            if (updatedArea.size > 1) {
+                updatedArea.removeLastOrNull()
+            }
 
-        updatedArea.add(selectedRegion)
+            updatedArea.add(selectedRegion)
+        } else {
+            autoSelectCountry(selectedRegion, updatedArea)
+        }
 
         viewModel.setArea(updatedArea)
         findNavController().popBackStack()
@@ -64,8 +66,12 @@ class FragmentRegion : Fragment() {
         setupSearch()
         navFun()
 
-        val countryId = arguments?.getString(FragmentFilterPlace.COUNTRY_ID) ?: return
+        val countryId = arguments?.getString(FragmentFilterPlace.COUNTRY_ID)
         viewModel.getCountryRegions(countryId)
+
+        if (countryId == null) {
+            viewModel.getCountries()
+        }
     }
 
     private fun setupView() {
@@ -81,6 +87,21 @@ class FragmentRegion : Fragment() {
         binding.regionList.adapter = adapter
     }
 
+    private fun autoSelectCountry(region: Area, areas: MutableList<Area>) {
+        viewModel.getCountriesScreenState().observe(viewLifecycleOwner) { state ->
+            if (state is ScreenState.Success) {
+                val country = state.data.firstOrNull { area ->
+                    area.areas.any { area -> area.id == region.id }
+                }
+
+                if (country != null) {
+                    areas.add(country)
+                    areas.add(region)
+                }
+            }
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.getRegionsScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -92,7 +113,7 @@ class FragmentRegion : Fragment() {
                 is ScreenState.Success -> {
                     showContent()
                     binding.loaderWrapper.searchProgressBar.isVisible = false
-                    adapter.updateList(state.data.areas)
+                    adapter.updateList(state.data)
                 }
 
                 is ScreenState.Empty -> {
@@ -121,6 +142,7 @@ class FragmentRegion : Fragment() {
                     placeholderImage.setImageResource(R.drawable.err_load_list)
                     placeholderText.text = requireContext().getString(R.string.err_load_list)
                 }
+
                 PLACEHOLDER_EMPTY -> {
                     placeholderImage.setImageResource(R.drawable.err_wtf_cat)
                     placeholderText.text = requireContext().getString(R.string.err_cant_find_region)
