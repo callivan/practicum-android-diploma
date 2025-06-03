@@ -69,6 +69,11 @@ class FragmentFilterPlace : Fragment() {
         binding.country.itemIcon.setImageResource(
             if (country == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
         )
+
+        binding.country.itemText.setTextAppearance(
+            if (country != null) R.style.colorPlaceFilter else R.style.colorPlaceFilterDefault
+        )
+
         binding.country.itemTextTop.text = "Страна"
         binding.country.itemText.text = if (country == null) "Страна" else country.name
         binding.buttonBlueLayout.isVisible = country != null
@@ -88,6 +93,11 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemIcon.setImageResource(
             if (region == null) R.drawable.arrow_forward_24px else R.drawable.close_24px
         )
+
+        binding.region.itemText.setTextAppearance(
+            if (region != null) R.style.colorPlaceFilter else R.style.colorPlaceFilterDefault
+        )
+
         binding.region.itemTextTop.text = "Регион"
         binding.region.itemText.text = if (region == null) "Регион" else region.name
         binding.buttonBlueLayout.isVisible = region != null
