@@ -20,7 +20,8 @@ class VacanciesFiltersRepositoryImpl(private val vacanciesFiltersPrefs: SharedPr
                 area = filters.area?.map { Area(id = it.id, name = it.name, areas = emptyList()) }?.toMutableList(),
                 salary = filters.salary,
                 onlyWithSalary = filters.onlyWithSalary,
-                industry = filters.industry?.map { Industry(id = it.id, name = it.name) }
+                industry = filters.industry?.map { Industry(id = it.id, name = it.name) },
+                isApply = filters.isApply
             )
         } else {
             null
@@ -33,7 +34,8 @@ class VacanciesFiltersRepositoryImpl(private val vacanciesFiltersPrefs: SharedPr
                 area = data.area?.map { AreaDto(id = it.id, name = it.name, areas = emptyList()) },
                 salary = data.salary,
                 onlyWithSalary = data.onlyWithSalary,
-                industry = data.industry?.map { IndustryDto(id = it.id, name = it.name) }
+                industry = data.industry?.map { IndustryDto(id = it.id, name = it.name) },
+                isApply = data.isApply
             )
         )
     }

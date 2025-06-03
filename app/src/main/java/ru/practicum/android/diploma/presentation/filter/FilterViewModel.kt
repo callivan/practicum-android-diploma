@@ -70,6 +70,18 @@ class FilterViewModel(
         filters = vacanciesFiltersInteractor.get()
     }
 
+    fun setApply(state: Boolean) {
+        if (filters == null) {
+            filters = VacanciesFilters()
+        }
+
+        filters = filters?.copy(isApply = state)
+
+        if (filters != null) {
+            vacanciesFiltersInteractor.add(filters!!)
+        }
+    }
+
     fun setIndustry(data: Industry?) {
         if (filters == null) {
             filters = VacanciesFilters()
@@ -95,7 +107,6 @@ class FilterViewModel(
     }
 
     fun setSalary(data: Int?) {
-        println(data)
         if (filters == null) {
             if (data == null) {
                 return

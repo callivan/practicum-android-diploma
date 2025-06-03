@@ -23,9 +23,7 @@ class FragmentFilterPlace : Fragment() {
     private val viewModel by viewModel<FilterViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilterPlaceBinding.inflate(inflater, container, false)
         return binding.root
@@ -58,12 +56,12 @@ class FragmentFilterPlace : Fragment() {
         binding.region.itemIcon.setImageResource(R.drawable.arrow_forward_24px)
 
         binding.buttonBlue.buttonBlue.text = "Выбрать"
-        binding.buttonBlue.buttonBlue.isVisible = false
     }
 
     private fun setCountryContent() {
         val filters = viewModel.getFilters()
         val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
+        val region = if (filters?.area?.isNotEmpty() == true && filters.area.size > 1) filters.area[1] else null
 
         binding.country.itemTextTop.isVisible = country != null
         binding.country.itemIcon.setImageResource(
@@ -71,7 +69,7 @@ class FragmentFilterPlace : Fragment() {
         )
         binding.country.itemTextTop.text = "Страна"
         binding.country.itemText.text = if (country == null) "Страна" else country.name
-        binding.buttonBlueLayout.isVisible = country != null
+        binding.buttonBlueLayout.isVisible = country != null || region != null
 
         binding.country.itemIcon.setOnClickListener {
             viewModel.setArea(null)
@@ -82,6 +80,7 @@ class FragmentFilterPlace : Fragment() {
 
     private fun setRegionContent() {
         val filters = viewModel.getFilters()
+        val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
         val region = if (filters?.area?.isNotEmpty() == true && filters.area.size > 1) filters.area[1] else null
 
         binding.region.itemTextTop.isVisible = region != null
@@ -90,7 +89,7 @@ class FragmentFilterPlace : Fragment() {
         )
         binding.region.itemTextTop.text = "Регион"
         binding.region.itemText.text = if (region == null) "Регион" else region.name
-        binding.buttonBlueLayout.isVisible = region != null
+        binding.buttonBlueLayout.isVisible = country != null || region != null
 
         binding.region.itemIcon.setOnClickListener {
             val country = if (filters?.area?.isNotEmpty() == true) filters.area[0] else null
@@ -105,11 +104,9 @@ class FragmentFilterPlace : Fragment() {
             val selectedCountry = viewModel.getFilters()?.area?.get(0)
 
             findNavController().navigate(
-                R.id.action_fragmentFilterPlace_to_fragmentRegion,
-                Bundle().apply {
+                R.id.action_fragmentFilterPlace_to_fragmentRegion, Bundle().apply {
                     putString(COUNTRY_ID, selectedCountry?.id)
-                }
-            )
+                })
         }
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFilterPlace_to_fragmentCountry)
@@ -131,6 +128,5 @@ class FragmentFilterPlace : Fragment() {
 
     companion object {
         const val COUNTRY_ID = "COUNTRY_ID"
-        const val REGION_ID = "REGION_ID"
     }
 }

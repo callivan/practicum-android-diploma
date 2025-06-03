@@ -59,6 +59,7 @@ class FragmentFilter : Fragment() {
         }
 
         binding.includedBtnSet.root.setOnClickListener {
+            viewModel.setApply(true)
             closeFragment()
         }
 
